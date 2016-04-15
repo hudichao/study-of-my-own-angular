@@ -27,3 +27,6 @@ npm install --save-dev browserify karma-browserify
 
 我们打开browserfiy的debug来使用source map。
 
+npm install --save lodash jquery
+
+使用lodash模板
