@@ -1,3 +1,3 @@
 
 
-https://github.com/teropa/build-your-own-angularjsw
+https://github.com/teropa/build-your-own-angularjs

@@ -6,7 +6,7 @@
 
 配jshint,允许外部`$`与`_`。允许使用`setTimeout`和`console`
 
-使用jshint
+使用jshint `grunt jshint`
 
 通过grunt-contrib-testem 装jsmine。
 
