@@ -20,4 +20,4 @@ angular使用脏值检测来完成第四条
 
 $digest会遍历所有watcher。并执行他们的watch和listener函数。
 
-
+实现scope
