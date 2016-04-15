@@ -13,3 +13,9 @@
 再装sinon。 以上都使用--save-dev。
 
 配置jshint，和testem
+
+使用phantomjs来跑test。设置`launch_in_dev` option
+
+
+
+
