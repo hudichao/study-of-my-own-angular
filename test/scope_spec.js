@@ -28,7 +28,7 @@ describe("Scope", function() {
 
     it("watchFun的传参为scope", function() {
       var watchFn = jasmine.createSpy();
-      var listenerFn = function() {}
+      var listenerFn = function() {};
       scope.$watch(watchFn, listenerFn);
 
       scope.$digest();
@@ -58,7 +58,18 @@ describe("Scope", function() {
       scope.$digest();
       expect(scope.counter).toBe(2);
 
-    })
+    });
 
+    it("即使初始值为undefined，也能执行监听函数", function() {
+      scope.counter = 0;
+
+      scope.$watch(
+        function(scope) {return scope.someValue;},
+        function(newVal, oldVal, scope) {scope.counter++;}
+      );
+
+      scope.$digest();
+      expect(scope.counter).toBe(1);
+    });
   });
 });

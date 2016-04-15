@@ -21,3 +21,13 @@ angular使用脏值检测来完成第四条
 $digest会遍历所有watcher。并执行他们的watch和listener函数。
 
 实现scope
+
+发现几点。
+
+1. scope上的绑定不会对性能有影响。因为angular会遍历watches，而不是scope上的
+属性
+2. 每次$digest，每个watcher都会被执行。所以watcher的数量是关键。
+
+我们希望第一次digest一定触发listener。所以加了一个空函数。这样不可能赋值和它相同。
+
+
