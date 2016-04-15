@@ -17,3 +17,13 @@ npm install --save-dev phantomjs-prebuilt karma-phantomjs-launcher
 
 
 新建karma.config.js
+
+使用commonjs，一个文件一个module
+
+我们用commonjs规范写代码，然后用browserify来打包中可以在浏览器运行的js
+npm install --save-dev browserify karma-browserify
+
+更新karma.conf.js
+
+我们打开browserfiy的debug来使用source map。
+
