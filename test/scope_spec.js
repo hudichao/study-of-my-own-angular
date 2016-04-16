@@ -85,5 +85,14 @@ describe("Scope", function() {
       scope.$digest();
       expect(oldValueGiven).toBe(123);
     });
+
+    it("可以有没有监听函数的watcher", function() {
+      var watchFn = jasmine.createSpy().and.returnValue("something");
+      scope.$watch(watchFn);
+
+      scope.$digest();
+
+      expect(watchFn).toHaveBeenCalled();
+    });
   });
 });

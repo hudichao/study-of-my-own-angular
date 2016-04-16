@@ -32,4 +32,9 @@ $digest会遍历所有watcher。并执行他们的watch和listener函数。
 
 但是我们又不希望第一次返回这个空函数（内存泄露），所以对第一次，oldVal和newVal返回相同值
 
+当scope被digest时获得提醒。
+
+watcher如果有返回值，就会有dirty check。
+
+
 
