@@ -1,6 +1,7 @@
 'use strict';
 
 var Scope = require("../src/scope");
+var _ = require("lodash");
 
 describe("Scope", function() {
   it("一个对象", function() {
@@ -145,6 +146,51 @@ describe("Scope", function() {
       );
 
       expect((function() {scope.$digest();})).toThrow();
+    });
+
+    it("当最后一个watch clean时结束digest", function() {
+      scope.array = _.range(100);
+      var watchExecutions = 0;
+
+      _.times(100, function(i) {
+        scope.$watch(
+          function(scope) {
+            watchExecutions++;
+            return scope.array[i];
+          },
+          function(newVal, oldVal, scope) {
+
+          }
+        );
+      });
+      expect(watchExecutions).toBe(0);
+      scope.$digest();
+      expect(watchExecutions).toBe(200);
+
+      scope.array[0] = 420;
+      scope.$digest();
+      expect(watchExecutions).toBe(301);
+
+    });
+
+    it("新wathcer会正常被digest", function() {
+      scope.aValue = "abc";
+      scope.counter = 0;
+
+      scope.$watch(
+        function(scope) {return scope.aValue;},
+        function(newVal, oldVal, scope) {
+          scope.$watch(
+            function(scope) {return scope.aValue;},
+            function(newVal, oldVal, scope) {
+              scope.counter++;
+            }
+          );
+        }
+      );
+
+      scope.$digest();
+      expect(scope.counter).toBe(1);
     });
 
   });

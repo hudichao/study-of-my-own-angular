@@ -40,3 +40,10 @@ dirty时保持digest。我们需要在watch的值停止变化前不断遍历所�
 
 避免无限遍历。
 
+每一轮减少遍历的watch的方法，记录最后一个dirty的watch，然后遇到clean watch后，判断是否是那个最后dirty的watch。如果是，说明
+这轮已经结束，没有watch是dirty的。这样不需要走完全部。
+
+显式return false来跳出lodash的forEach循环
+
+
+特殊情况：在listener中加watch的情况。

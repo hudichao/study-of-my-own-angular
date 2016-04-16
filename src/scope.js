@@ -14,6 +14,7 @@ Scope.prototype.$watch = function(watchFn, listenerFn) {
     last: initWatchVal
   };
   this.$$watchers.push(watcher);
+  this.$$lastDirtyWatch = null;
 };
 Scope.prototype.$$digestOnce = function() {
   var self = this;
@@ -24,9 +25,12 @@ Scope.prototype.$$digestOnce = function() {
     oldVal = watcher.last;
 
     if (newVal !== oldVal) {
+      self.$$lastDirtyWatch = watcher;
       watcher.last = newVal;      
       watcher.listenerFn(newVal, oldVal === initWatchVal ? newVal : oldVal, self);
       dirty = true;
+    } else if (self.$$lastDirtyWatch === watcher) {
+      return false;
     }
   });
   return dirty;
@@ -34,6 +38,8 @@ Scope.prototype.$$digestOnce = function() {
 Scope.prototype.$digest = function() {
   var ttl = 10;
   var dirty;
+  this.$$lastDirtyWatch = null;
+
   do {
     dirty = this.$$digestOnce();
     if (dirty && ttl-- === 0) {
