@@ -232,6 +232,25 @@ describe("Scope", function() {
 
     });
 
+    it("处理$eval了的函数并返回值", function() {
+      scope.aValue = 42;
+
+      var result = scope.$eval(function(scope) {
+        return scope.aValue;
+      });
+
+      expect(result).toBe(42);
+    });
+
+    it("处理$eval的第二个参数", function() {
+      scope.aValue = 42;
+
+      var result = scope.$eval(function(scope, arg) {
+        return scope.aValue + arg;
+      }, 2);
+
+      expect(result).toBe(44);
+    });
   });
 
 

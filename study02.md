@@ -53,3 +53,8 @@ dirty时保持digest。我们需要在watch的值停止变化前不断遍历所�
 
 还需要处理NaN，因为NaN不等于自己，导致会一直dirty。对于value based检查，因为用了lodash的isEqual已经处理了，
 对于reference based 检查，我们需要自己做。
+
+$eval的使用
+
+
+
