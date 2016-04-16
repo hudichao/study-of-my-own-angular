@@ -106,7 +106,7 @@ describe("Scope", function() {
           }
         }
       );
-      
+
       scope.$watch(
         function(scope) {return scope.name;},
         function(newVal, oldVal, scope) {
@@ -125,5 +125,30 @@ describe("Scope", function() {
       scope.$digest();
       expect(scope.initial).toBe("B.");
     });
+
+    it("超过10次遍历后放弃watch", function() {
+      scope.counterA = 0;
+      scope.counterB = 0;
+
+      scope.$watch(
+        function(scope) {return scope.counterA;},
+        function(newVal, oldVal, scope) {
+          scope.counterB++;
+        }
+      );
+
+      scope.$watch(
+        function(scope) {return scope.counterB;},
+        function(newVal, oldVal, scope) {
+          scope.counterA++;
+        }
+      );
+
+      expect((function() {scope.$digest();})).toThrow();
+    });
+
   });
+
+
+
 });

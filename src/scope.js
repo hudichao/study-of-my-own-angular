@@ -32,9 +32,13 @@ Scope.prototype.$$digestOnce = function() {
   return dirty;
 };
 Scope.prototype.$digest = function() {
+  var ttl = 10;
   var dirty;
   do {
     dirty = this.$$digestOnce();
+    if (dirty && ttl-- === 0) {
+      throw "10 digest iteration reached";
+    }
   } while(dirty);
 };
 module.exports = Scope;

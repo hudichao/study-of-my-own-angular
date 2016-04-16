@@ -36,5 +36,7 @@ $digest会遍历所有watcher。并执行他们的watch和listener函数。
 
 watcher如果有返回值，就会有dirty check。
 
+dirty时保持digest。我们需要在watch的值停止变化前不断遍历所有watcher。
 
+避免无限遍历。
 
