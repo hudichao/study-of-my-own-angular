@@ -71,5 +71,19 @@ describe("Scope", function() {
       scope.$digest();
       expect(scope.counter).toBe(1);
     });
+
+
+    it("第一次oldVal就是newVal", function() {
+      scope.someValue = 123;
+      var oldValueGiven;
+
+      scope.$watch(
+        function(scope) {return scope.someValue;},
+        function(newVal, oldVal, scope) {oldValueGiven = oldVal;}
+      )
+
+      scope.$digest();
+      expect(oldValueGiven).toBe(123);
+    });
   });
 });

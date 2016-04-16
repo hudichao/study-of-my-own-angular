@@ -30,4 +30,6 @@ $digest会遍历所有watcher。并执行他们的watch和listener函数。
 
 我们希望第一次digest一定触发listener。所以加了一个空函数。这样不可能赋值和它相同。
 
+但是我们又不希望第一次返回这个空函数（内存泄露），所以对第一次，oldVal和newVal返回相同值
+
 
