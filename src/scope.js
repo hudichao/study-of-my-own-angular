@@ -7,6 +7,13 @@ function Scope() {
 function initWatchVal() {
 
 }
+Scope.prototype.$apply = function(expr) {
+  try {
+    return this.$eval(expr);
+  } finally {
+    this.$digest();
+  }
+};
 Scope.prototype.$eval = function(expr, locals) {
   return expr(this, locals);
 };

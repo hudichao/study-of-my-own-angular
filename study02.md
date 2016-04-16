@@ -56,5 +56,9 @@ dirty时保持digest。我们需要在watch的值停止变化前不断遍历所�
 
 $eval的使用
 
+$apply：将外部的代码带入digest cycle
+
+$apply传入一个参数，用$eval执行这个函数，并触发$digest
+
 
 

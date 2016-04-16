@@ -251,6 +251,30 @@ describe("Scope", function() {
 
       expect(result).toBe(44);
     });
+
+    it("$apply了的函数触发digest", function() {
+      scope.aValue = "someValue";
+      scope.counter = 0;
+
+      scope.$watch(
+        function(scope) {
+          return scope.aValue;
+        },
+        function(newVal, oldVal, scope) {
+          scope.counter++;
+        }
+      );
+
+      scope.$digest();
+      expect(scope.counter).toBe(1);
+
+      scope.$apply(function(scope) {
+        scope.aValue = "someOtherValue";
+      });
+
+      expect(scope.counter).toBe(2);
+
+    });
   });
 
 
