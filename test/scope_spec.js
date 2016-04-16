@@ -80,7 +80,7 @@ describe("Scope", function() {
       scope.$watch(
         function(scope) {return scope.someValue;},
         function(newVal, oldVal, scope) {oldValueGiven = oldVal;}
-      )
+      );
 
       scope.$digest();
       expect(oldValueGiven).toBe(123);
@@ -93,6 +93,37 @@ describe("Scope", function() {
       scope.$digest();
 
       expect(watchFn).toHaveBeenCalled();
+    });
+
+    it("在一个digest中触发联动了的watcher", function() {
+      scope.name = 'Jane';
+
+      scope.$watch(
+        function(scope) {return scope.nameUpper;},
+        function(newVal, oldVal, scope) {
+          if (newVal) {
+            scope.initial = newVal.substring(0, 1) + ".";
+          }
+        }
+      );
+      
+      scope.$watch(
+        function(scope) {return scope.name;},
+        function(newVal, oldVal, scope) {
+          if (newVal) {
+            scope.nameUpper = newVal.toUpperCase();
+          }
+        }
+      );
+
+
+
+      scope.$digest();
+      expect(scope.initial).toBe("J.");
+
+      scope.name = "Bob";
+      scope.$digest();
+      expect(scope.initial).toBe("B.");
     });
   });
 });
