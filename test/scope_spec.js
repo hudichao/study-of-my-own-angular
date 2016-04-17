@@ -376,6 +376,29 @@ describe("Scope", function() {
       expect(scope.phaseInApplyFunction).toBe('$apply');
     });
 
+    it("$evalAsync会安排一个digest", function(done) {
+      scope.aValue = "abc";
+      scope.counter = 0;
+
+      scope.$watch(
+        function(scope) {return scope.aValue;},
+        function(newVal, oldVal, scope) {
+          scope.counter++;
+        }
+      );
+
+      scope.$evalAsync(function(scope) {
+
+      });
+
+      expect(scope.counter).toBe(0);
+
+      setTimeout(function() {
+        expect(scope.counter).toBe(1);
+        done();
+      }, 50);
+    });
+
   });
 
   
