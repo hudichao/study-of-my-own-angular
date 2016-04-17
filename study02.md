@@ -69,4 +69,10 @@ $timeout会延迟处理一个函数然后执行$apply
 我们不需要浏览器反复渲染。
 
 
+确保不dirty时，evalAsync的函数也在当前digest中执行。所以要改变终止条件。并且确保$evalAsync是有遍历次数限制。
+
+
+
+
+
 
