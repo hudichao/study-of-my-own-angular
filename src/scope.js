@@ -3,7 +3,10 @@ var _ = require("lodash");
 
 function Scope() {
   this.$$watchers = [];
+  this.$$lastDirtyWatch = null;
+  this.$$asyncQueue = [];
 }
+
 function initWatchVal() {
 
 }

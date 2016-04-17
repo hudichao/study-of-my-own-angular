@@ -60,5 +60,13 @@ $apply：将外部的代码带入digest cycle
 
 $apply传入一个参数，用$eval执行这个函数，并触发$digest
 
+$evalAsync -- 延迟执行
+
+$timeout会延迟处理一个函数然后执行$apply
+
+而$evalAsync可以在当前这个digest中延迟执行函数。
+
+我们不需要浏览器反复渲染。
+
 
 

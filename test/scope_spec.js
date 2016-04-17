@@ -275,6 +275,26 @@ describe("Scope", function() {
       expect(scope.counter).toBe(2);
 
     });
+
+    it("被evalAsync的函数会在同一个cyle中被执行", function() {
+      scope.aValue = [1, 2, 3];
+      scope.asyncEvaluated = false;
+      scope.asyncEvaluatedImmediately = false;
+
+      scope.$watch(
+        function(scope) {return scope.aValue;},
+        function(newVal, oldVal, scope) {
+          scope.$evalAsync(function(scope) {
+            scope.asyncEvaluated = true;
+          });
+          scope.asyncEvaluatedImmediately = scope.asyncEvaluated;
+        }
+      );
+
+      scope.$digest();
+      expect(scope.asyncEvaluated).toBe(true);
+      expect(scope.asyncEvaluatedImmediately).toBe(false);
+    });
   });
 
 
