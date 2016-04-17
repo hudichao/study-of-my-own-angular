@@ -71,7 +71,9 @@ $timeout会延迟处理一个函数然后执行$apply
 
 确保不dirty时，evalAsync的函数也在当前digest中执行。所以要改变终止条件。并且确保$evalAsync是有遍历次数限制。
 
+需要确保$evalAsync能触发一个digest。而不是等待别的东西触发digest。后面有用$applyAsync。那个更好。
 
+我们需要scope有一个phase，来确定现在是否在digest中。
 
 
 

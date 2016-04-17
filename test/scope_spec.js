@@ -350,13 +350,34 @@ describe("Scope", function() {
         },
         function(newVal, oldVal, scope) {}
       );
-      
+
       expect(function() {scope.$digest();}).toThrow();
 
     });
 
+    it("scope有$$phase", function() { 
+      scope.aValue = [1, 2, 3];
+      scope.phaseInWatchFunction = undefined;
+      scope.phaseInListenerFunction = undefined;
+      scope.phaseInApplyFunction = undefined;
+      scope.$watch( 
+        function(scope) {
+          scope.phaseInWatchFunction = scope.$$phase;
+          return scope.aValue; 
+        },
+        function(newValue, oldValue, scope) { 
+          scope.phaseInListenerFunction = scope.$$phase;
+      });
+      scope.$apply(function(scope) { 
+        scope.phaseInApplyFunction = scope.$$phase;
+      });
+      expect(scope.phaseInWatchFunction).toBe('$digest');
+      expect(scope.phaseInListenerFunction).toBe('$digest');
+      expect(scope.phaseInApplyFunction).toBe('$apply');
+    });
+
   });
 
-
+  
 
 });
