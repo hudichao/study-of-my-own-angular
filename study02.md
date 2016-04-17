@@ -75,6 +75,15 @@ $timeout会延迟处理一个函数然后执行$apply
 
 我们需要scope有一个phase，来确定现在是否在digest中。
 
+合并$apply : $applyAsync
+evalAsync主要还是被用在digest内部的defer work。
+和$apply不同，$applySync不会马上执行函数，但会在很快的时间里执行。主要用途HTTP请求。如果用apply,没一个HTTP请求都会触发一个digest。
+
+$applyAsync和$evalAsync的区别是，$applyAsync永远会延迟运行到下一个digest中，哪怕在当前digest中执行。
+
+
+
+
 
 
 
