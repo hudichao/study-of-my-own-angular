@@ -91,6 +91,8 @@ $applyAsync和$evalAsync的区别是，$applyAsync永远会延迟运行到下一
 
 只会执行一次。
 
+错误处理。
+
 
 
 

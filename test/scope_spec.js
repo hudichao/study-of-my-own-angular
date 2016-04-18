@@ -545,6 +545,115 @@ describe("Scope", function() {
 
       expect(scope.watchedValue).toBe("改变值");
     });
+
+    it("捕捉watch函数中的exception", function() {
+      scope.aValue = "abc";
+      scope.counter = 0;
+
+      scope.$watch(
+        function(scope) {
+          throw "error";
+        },
+        function(newVal, oldVal, scope) {}
+      );
+
+      scope.$watch(
+        function(scope) {
+          return scope.aValue;
+        },
+        function(newVal, oldVal, scope) {
+          scope.counter++;
+        }
+      );
+
+      scope.$digest();
+      expect(scope.counter).toBe(1);
+    });
+
+    it("捕捉listener函数中的exception", function() {
+      scope.aValue = "abc";
+      scope.counter = 0;
+
+      scope.$watch(
+        function(scope) {
+          return scope.aValue;
+        },
+        function(newVal, oldVal, scope) {
+          throw "Error";
+        }
+      );
+
+      scope.$watch(
+        function(scope) {
+          return scope.aValue;
+        },
+        function(newVal, oldVal, scope) {
+          scope.counter++;
+        }
+      );
+
+      scope.$digest();
+      expect(scope.counter).toBe(1);
+    });
+
+    it("捕捉$evalAsync中的exception", function(done) {
+      scope.aValue = "abc";
+      scope.counter = 0;
+
+      scope.$watch(
+        function(scope) {
+          return scope.aValue;
+        },
+        function(newVal, oldVal, scope) {
+          scope.counter++;
+        }
+      );
+
+      scope.$evalAsync(function(scope) {
+        throw "Error";
+      });
+
+      setTimeout(function() {
+        expect(scope.counter).toBe(1);
+        done();
+      }, 50);
+    });
+
+    it("捕捉$applyAsync中的exception", function(done) {
+      scope.$applyAsync(function(scope) {
+        throw "Error";
+      });
+
+      scope.$applyAsync(function(scope) {
+        throw "Error";
+      });
+
+      scope.$applyAsync(function(scope) {
+        scope.applied = true;
+      });
+
+      setTimeout(function() {
+        expect(scope.applied).toBe(true);
+        done();
+      }, 50);
+    });
+
+    it("捕捉$$postDigest中的exception", function() {
+      var didRun = false;
+
+      scope.$$postDigest(function() {
+        throw "Error";
+      });
+
+      scope.$$postDigest(function() {
+        didRun = true;
+      });
+
+      scope.$digest();
+
+      expect(didRun).toBe(true);
+      
+    });
   });
 
   
