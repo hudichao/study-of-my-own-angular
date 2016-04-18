@@ -83,6 +83,10 @@ $applyAsync和$evalAsync的区别是，$applyAsync永远会延迟运行到下一
 
 合并$applyAsync。我们要保证多个$applyAsync只会触发一个digest
 
+如果digest已经在执行了，那要取消$applyAsync的digest。并且在那个digest做完$applyAsync的事情。
+
+注意使用了_.bind语法。
+
 
 
 

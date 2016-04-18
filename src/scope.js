@@ -13,7 +13,12 @@ function Scope() {
 function initWatchVal() {
 
 }
-
+Scope.prototype.$$flushApplyAsync = function() {
+  while (this.$$applyAsyncQueue.length) {
+    this.$$applyAsyncQueue.shift()();
+  }
+  this.$$applyAsyncId = null;
+};
 Scope.prototype.$applyAsync = function(expr) {
   var self = this;
   self.$$applyAsyncQueue.push(function() {
@@ -23,12 +28,7 @@ Scope.prototype.$applyAsync = function(expr) {
   //保证只有一个setTimeout
   if (self.$$applyAsyncId === null) {
     self.$$applyAsyncId = setTimeout(function() {
-      self.$apply(function() {
-        while (self.$$applyAsyncQueue.length) {
-          self.$$applyAsyncQueue.shift()();
-        }
-        self.$$applyAsyncId = null;
-      });
+      self.$apply(_.bind(self.$$flushApplyAsync, self));
     }, 0);
   }
 
@@ -109,6 +109,11 @@ Scope.prototype.$digest = function() {
   var dirty;
   this.$$lastDirtyWatch = null;
   this.$beginPhase("$digest");
+
+  if (this.$$applyAsyncId) {
+    clearTimeout(this.$$applyAsyncId);
+    this.$$flushApplyAsync();
+  }
   do {
     while(this.$$asyncQueue.length) {
       var asyncTask = this.$$asyncQueue.shift();
