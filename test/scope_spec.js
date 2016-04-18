@@ -503,6 +503,48 @@ describe("Scope", function() {
 
     });
 
+    it("在每个digest后执行$$postDigest函数", function() {
+      scope.counter = 0;
+
+      scope.$$postDigest(function() {
+        scope.counter++;
+      });
+
+      expect(scope.counter).toBe(0);
+
+      scope.$digest();
+
+      expect(scope.counter).toBe(1);
+
+      scope.$digest();
+
+      expect(scope.counter).toBe(1);
+    });
+
+    it("digest不包括$$postDigest", function() {
+      scope.aValue = "原始值";
+
+      scope.$$postDigest(function() {
+        scope.aValue = "改变值";
+      });
+
+      scope.$watch(
+        function(scope) {
+          return scope.aValue;
+        },
+        function(newVal, oldVal, scope) {
+          scope.watchedValue = newVal;
+        }
+      );
+
+      scope.$digest();
+
+      expect(scope.watchedValue).toBe("原始值");
+
+      scope.$digest();
+
+      expect(scope.watchedValue).toBe("改变值");
+    });
   });
 
   

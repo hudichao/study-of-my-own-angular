@@ -87,6 +87,12 @@ $applyAsync和$evalAsync的区别是，$applyAsync永远会延迟运行到下一
 
 注意使用了_.bind语法。
 
+在digest后执行函数 $$postDigest 。注意和$evalAsync和$applyAsync不同。不会发生digest。
+
+只会执行一次。
+
+
+
 
 
 
