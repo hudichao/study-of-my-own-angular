@@ -81,6 +81,9 @@ evalAsync主要还是被用在digest内部的defer work。
 
 $applyAsync和$evalAsync的区别是，$applyAsync永远会延迟运行到下一个digest中，哪怕在当前digest中执行。
 
+合并$applyAsync。我们要保证多个$applyAsync只会触发一个digest
+
+
 
 
 

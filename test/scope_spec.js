@@ -399,7 +399,7 @@ describe("Scope", function() {
       }, 50);
     });
 
-    it("使用$applyAsync来异步apply", function() {
+    it("使用$applyAsync来异步apply", function(done) {
       scope.counter = 0;
 
       scope.$watch(
@@ -425,7 +425,7 @@ describe("Scope", function() {
 
     });
 
-    it("$applyAsync了的函数永远不会在同一个cycle中运行", function() {
+    it("$applyAsync了的函数永远不会在同一个cycle中运行", function(done) {
       scope.aValue = [1, 2, 3];
       scope.asyncApplied = false;
 
@@ -444,6 +444,32 @@ describe("Scope", function() {
         expect(scope.asyncApplied).toBe(true);
         done();
       }, 50);
+    });
+
+    it("合并$applyAsync的很多call", function(done) {
+      scope.counter = 0;
+
+      scope.$watch(
+        function(scope) {
+          scope.counter++;
+          return scope.aValue;
+        },
+        function(newVal, oldVal, scope) {}
+      );
+
+      scope.$applyAsync(function(scope) {
+        scope.aValue = "abc";
+      });
+
+      scope.$applyAsync(function(scope) {
+        scope.aValue = "def";
+      });
+
+      setTimeout(function() {
+        expect(scope.counter).toBe(2);
+        done();
+      }, 50);
+
     });
 
   });

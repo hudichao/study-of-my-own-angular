@@ -6,6 +6,7 @@ function Scope() {
   this.$$lastDirtyWatch = null;
   this.$$asyncQueue = [];
   this.$$applyAsyncQueue = [];
+  this.$$applyAsyncId = null;
   this.$$phase = null;
 }
 
@@ -18,13 +19,20 @@ Scope.prototype.$applyAsync = function(expr) {
   self.$$applyAsyncQueue.push(function() {
     self.$eval(expr);
   });
-  setTimeout(function() {
-    self.$apply(function() {
-      while (self.$$applyAsyncQueue.length) {
-        self.$$applyAsyncQueue.shift()();
-      }
-    });
-  }, 0);
+
+  //保证只有一个setTimeout
+  if (self.$$applyAsyncId === null) {
+    self.$$applyAsyncId = setTimeout(function() {
+      self.$apply(function() {
+        while (self.$$applyAsyncQueue.length) {
+          self.$$applyAsyncQueue.shift()();
+        }
+        self.$$applyAsyncId = null;
+      });
+    }, 0);
+  }
+
+ 
 };
 Scope.prototype.$beginPhase = function(phase) {
   if (this.$$phase) {
