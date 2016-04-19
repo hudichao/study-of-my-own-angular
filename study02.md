@@ -111,7 +111,7 @@ $watchGroup
 
 $watchGroup的取消注册。 即watch为空时的特殊处理。
 
-
+scope 的 $watch $digest $apply结束
 
 
 
