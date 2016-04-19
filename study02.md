@@ -93,7 +93,13 @@ $applyAsync和$evalAsync的区别是，$applyAsync永远会延迟运行到下一
 
 错误处理。
 
+watch的移除
 
+因为会在_.forEach中对数组数量进行操作。所以用unshift代替push，并从尾部开始循环。
+
+解决因为短循环，造成的watch清除时的bug。
+
+最后考虑在一个watch中移除多个watch的情况。防止undfined的报错。
 
 
 
