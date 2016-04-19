@@ -771,10 +771,145 @@ describe("Scope", function() {
       scope.$digest();
 
       expect(scope.counter).toBe(0);
-      
+
     }); 
   });
 
-  
+  describe("$watchGroup", function() {
+    var scope;
+    beforeEach(function() {
+      scope = new Scope();
+    });
+
+    it("watch是个数组", function() {
+      var gotNewValues, gotOldValues;
+
+      scope.aValue = 1;
+
+      scope.anotherValue = 2;
+
+      scope.$watchGroup([
+        function(scope) {return scope.aValue;},
+        function(scope) {return scope.anotherValue;}
+      ], function(newVals, oldVals, scope) {
+        gotNewValues = newVals;
+        gotOldValues = oldVals;
+      });
+
+      scope.$digest();
+
+      expect(gotNewValues).toEqual([1, 2]);
+      expect(gotOldValues).toEqual([1, 2]);
+
+    });
+
+    it("在digest中只执行listener一次", function() {
+      var counter = 0;
+
+      scope.aValue = 1;
+      scope.anotherValue = 2;
+
+      scope.$watchGroup([
+        function(scope) {return scope.aValue;},
+        function(scope) {return scope.anotherValue;}
+      ], function(newVals, oldVals, scope) {
+        counter++;
+      });
+
+      scope.$digest();
+
+      expect(counter).toEqual(1);
+    });
+
+    it("第一次运行时oldValues和newValues完全相等", function() {
+      var gotNewValues, gotOldValues;
+
+      scope.aValue = 1;
+
+      scope.anotherValue = 2;
+
+      scope.$watchGroup([
+        function(scope) {return scope.aValue;},
+        function(scope) {return scope.anotherValue;}
+      ], function(newVals, oldVals, scope) {
+        gotNewValues = newVals;
+        gotOldValues = oldVals;
+      });
+
+      scope.$digest();
+
+      expect(gotNewValues).toBe(gotOldValues);
+    });
+
+    it("对于后续的运行，oldValues和newValues保持不同", function() {
+      var gotNewValues, gotOldValues;
+
+      scope.aValue = 1;
+
+      scope.anotherValue = 2;
+
+      scope.$watchGroup([
+        function(scope) {return scope.aValue;},
+        function(scope) {return scope.anotherValue;}
+      ], function(newVals, oldVals, scope) {
+        gotNewValues = newVals;
+        gotOldValues = oldVals;
+      });
+
+      scope.$digest();
+
+      scope.anotherValue = 3;
+      scope.$digest();
+
+      expect(gotNewValues).toEqual([1, 3]);
+      expect(gotOldValues).toEqual([1, 2]);
+    });
+
+    it("当watch array是空时，执行listener一次", function() {
+      var gotNewValues, gotOldValues;
+
+      scope.$watchGroup([], function(newValues, oldValues, scope) {
+        gotNewValues = newValues;
+        gotOldValues = oldValues;
+      });
+
+      scope.$digest();
+      expect(gotNewValues).toEqual([]);
+      expect(gotOldValues).toEqual([]);
+    });
+
+
+    it("能被移除", function() {
+      var counter = 0;
+
+      scope.aValue = 1;
+      scope.anotherValue = 2;
+
+      var destroyGroup = scope.$watchGroup([
+        function(scope) {return scope.aValue;},
+        function(scope) {return scope.anotherValue;}
+      ], function(newValues, oldValues, scope) {
+        counter++;
+      });
+
+      scope.$digest();
+
+      scope.anotherValue = 3;
+      destroyGroup();
+      scope.$digest();
+
+      expect(counter).toEqual(1);
+    });
+
+    it("当已经deregister时，不执行没有watch的listener", function() {
+      var counter = 0;
+      var destroyGroup = scope.$watchGroup([], 
+        function(newValues, oldValues, scope) { counter++;
+      });
+      destroyGroup();
+      scope.$digest();
+      expect(counter).toEqual(0);
+    });
+  });  
 
 });

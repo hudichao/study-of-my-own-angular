@@ -101,8 +101,15 @@ watch的移除
 
 最后考虑在一个watch中移除多个watch的情况。防止undfined的报错。
 
+$watchGroup
 
+一个digest只执行listener一次。
 
+需要保证初始时，两个array完全相等。和watch第一次的处理差不多。
+
+对于watch为空时，执行一次。
+
+$watchGroup的取消注册。 即watch为空时的特殊处理。
 
 
 
