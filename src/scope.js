@@ -14,6 +14,15 @@ function Scope() {
 function initWatchVal() {
 
 }
+Scope.prototype.$new = function() {
+  return Object.create(this);
+};
+// Scope.prototype.$new = function() {
+//   var ChildScope = function() {};
+//   ChildScope.prototype = this;
+//   var child = new ChildScope();
+//   return child;
+// };
 Scope.prototype.$watchGroup = function(watchFns, listenerFn) {
   var self = this;
   var newValues = new Array(watchFns.length);
@@ -59,7 +68,7 @@ Scope.prototype.$watchGroup = function(watchFns, listenerFn) {
     _.forEach(destroyFunctions, function(destroyFunction) {
       destroyFunction();
     });
-  }
+  };
 
 };
 Scope.prototype.$$postDigest = function(fn) {
@@ -148,7 +157,7 @@ Scope.prototype.$watch = function(watchFn, listenerFn, valueEq) {
       self.$$watchers.splice(index, 1);
       self.$$lastDirtyWatch = null;
     }
-  }
+  };
 };
 Scope.prototype.$$digestOnce = function() {
   var self = this;
