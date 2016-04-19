@@ -1021,5 +1021,58 @@ describe("Scope", function() {
       expect(parent.user.name).toBe("Jill");
 
     });
+
+    it("不digest爸爸", function() {
+      var parent = new Scope();
+      var child = parent.$new();
+
+      parent.aValue = "abc";
+      parent.$watch(
+        function(scope) {
+          return scope.aValue;
+        },
+        function(newVal, oldVal, scope) {
+          scope.aValueWas = newVal;
+        }
+      );
+
+      child.$digest();
+      expect(child.aValueWas).toBeUndefined();
+    });
+
+    it("存儿子们(不存孙子)", function() {
+      var parent = new Scope();
+      var child1 = parent.$new();
+      var child2 = parent.$new();
+      var child2_1 = child2.$new();
+
+      expect(parent.$$children.length).toBe(2);
+      expect(parent.$$children[0]).toBe(child1);
+      expect(parent.$$children[1]).toBe(child2);
+
+      expect(child1.$$children.length).toBe(0);
+      expect(child2.$$children.length).toBe(1);
+      expect(child2.$$children[0]).toBe(child2_1);
+
+    });
+
+    it("digeset儿子", function() {
+      var parent = new Scope();
+      var child = parent.$new();
+
+      parent.aValue = "abc";
+
+      child.$watch(
+        function(scope) {return scope.aValue;},
+        function(newVal, oldVal, scope) {
+          scope.aValueWas = newVal;
+        }
+      );
+
+      parent.$digest();
+
+      expect(child.aValueWas).toBe("abc");
+
+    });
   });
 });
