@@ -998,6 +998,28 @@ describe("Scope", function() {
       expect(aa.anotherValue).toBeUndefined();
       expect(aaa.anotherValue).toBeUndefined();
     });
+
+    it("遮蔽爸爸的同名property", function() {
+      var parent = new Scope();
+      var child = parent.$new();
+
+      parent.name = "Joe";
+      child.name = "Jill";
+
+      expect(child.name).toBe("Jill");
+      expect(parent.name).toBe("Joe");
+    });
     
+    it("不遮蔽爸爸(爸爸跟着儿子变)", function() {
+      var parent = new Scope();
+      var child = parent.$new();
+
+      parent.user = {name: "Joe"};
+      child.user.name = "Jill";
+
+      expect(child.user.name).toBe("Jill");
+      expect(parent.user.name).toBe("Jill");
+
+    });
   });
 });
