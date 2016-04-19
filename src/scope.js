@@ -25,15 +25,26 @@ Scope.prototype.$$everyScope = function(fn) {
     return false;
   }
 };
-Scope.prototype.$new = function() {
-  var ChildScope = function() {};
-  ChildScope.prototype = this;
-  var child = new ChildScope();
+Scope.prototype.$new = function(isolated) {
+  var child;
+  if (isolated) {
+    child = new Scope();
+    child.$root = this.$root;
+    child.$$asyncQueue = this.$$asyncQueue;
+    child.$$postDigestQueue = this.$$postDigestQueue;
+    child.$$applyAsyncQueue = this.$$applyAsyncQueue;
+  } else {
+    var ChildScope = function() {};
+    ChildScope.prototype = this;
+    child = new ChildScope();
+  }
+ 
   this.$$children.push(child);
   child.$$watchers = [];
   child.$$children = [];
   return child;
 };
+
 Scope.prototype.$watchGroup = function(watchFns, listenerFn) {
   var self = this;
   var newValues = new Array(watchFns.length);
@@ -93,7 +104,7 @@ Scope.prototype.$$flushApplyAsync = function() {
       console.error(e);
     }
   }
-  this.$$applyAsyncId = null;
+  this.$root.$$applyAsyncId = null;
 };
 Scope.prototype.$applyAsync = function(expr) {
   var self = this;
@@ -102,8 +113,8 @@ Scope.prototype.$applyAsync = function(expr) {
   });
 
   //保证只有一个setTimeout
-  if (self.$$applyAsyncId === null) {
-    self.$$applyAsyncId = setTimeout(function() {
+  if (self.$root.$$applyAsyncId === null) {
+    self.$root.$$applyAsyncId = setTimeout(function() {
       self.$apply(_.bind(self.$$flushApplyAsync, self));
     }, 0);
   }
@@ -211,8 +222,8 @@ Scope.prototype.$digest = function() {
   this.$root.$$lastDirtyWatch = null;
   this.$beginPhase("$digest");
 
-  if (this.$$applyAsyncId) {
-    clearTimeout(this.$$applyAsyncId);
+  if (this.$root.$$applyAsyncId) {
+    clearTimeout(this.$root.$$applyAsyncId);
     this.$$flushApplyAsync();
   }
   do {

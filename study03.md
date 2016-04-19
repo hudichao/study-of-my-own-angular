@@ -44,3 +44,12 @@ Recursive Digestion
 
 对$apply, $evalAsync, $applyAsync同样。
 能够触发顶层的digest。所以需有一个$root属性。
+
+### isolated scope
+为做一个isolated scope，做一个没有爸爸原型链的scope。
+
+$digest直接就可以了。但$apply和$evalAsync需要改。现在的isolate scope的$root是自己。所以要改。
+
+现在的$$assyncQueue, $$applyAsyncQueue, $$postDigestQueue会被isolated scope的本地版本给遮蔽掉。
+
+

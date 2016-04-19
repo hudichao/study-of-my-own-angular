@@ -1121,5 +1121,117 @@ describe("Scope", function() {
         done();
       }, 50);
     });
+
+    it("当是isolated scope时，不能访问爸爸的属性", function() {
+      var parent = new Scope();
+      var child = parent.$new(true);
+
+      parent.aValue = "abc";
+
+      expect(child.aValue).toBeUndefined();
+    });
+
+    it("当是isolated scope时不能watch爸爸的属性", function() {
+      var parent = new Scope();
+      var child = parent.$new(true);
+
+      parent.aValue = "abc";
+
+      child.$watch(
+        function(scope) {return scope.aValue;},
+        function(newVal, oldVal, scope) {
+          scope.aValueWas = newVal;
+        }
+      );
+
+      child.$digest(); 
+      expect(child.aValueWas).toBeUndefined();
+
+    });
+
+    it("digest isolated的儿子们", function() {
+      var parent = new Scope();
+      var child = parent.$new(true);
+
+      child.aValue = "abc";
+      child.$watch(
+        function(scope) {return scope.aValue;},
+        function(newVal, oldVal, scope) {
+          scope.aValueWas = newVal;
+        }
+      );
+      parent.$digest();
+      expect(child.aValueWas).toBe("abc");
+    });
+
+    it("isolated scope的apply从顶部开始digest", function() {
+      var parent = new Scope();
+      var child = parent.$new(true);
+      var child2 = child.$new();
+
+      parent.aValue = "abc";
+      parent.counter = 0;
+      parent.$watch(
+        function(scope) {return scope.aValue;},
+        function(newVal, oldVal, scope) {
+          scope.counter++;
+        }
+      );
+
+      child2.$apply(function(scope) {});
+
+      expect(parent.counter).toBe(1);
+
+    });
+
+    it("isolated scope的evalAsync从顶部开始digest", function(done) {
+      var parent = new Scope();
+      var child = parent.$new(true);
+      var child2 = child.$new();
+
+      parent.aValue = "abc";
+      parent.counter = 0;
+      parent.$watch(
+        function(scope) {return scope.aValue;},
+        function(newVal, oldVal, scope) {
+          scope.counter++;
+        }
+      );
+
+      child2.$evalAsync(function(scope) {});
+
+      setTimeout(function() {
+        expect(parent.counter).toBe(1);
+        done();
+      }, 50);
+    });
+
+    it("在isolated scope上执行$evalAsync函数", function(done) {
+      var parent = new Scope();
+      var child = parent.$new(true);
+
+      child.$evalAsync(function(scope) {
+        scope.didEvalAsync = true;
+      });
+
+      setTimeout(function() {
+        expect(child.didEvalAsync).toBe(true);
+        done();
+      }, 50); 
+    });
+
+    it("在isolated scope上执行$$postDigest", function() {
+      var parent = new Scope();
+      var child = parent.$new(true);
+
+      child.$$postDigest(function() {
+        child.didPostDigest = true;
+      });
+
+      parent.$digest();
+
+      expect(child.didPostDigest).toBe(true);
+      
+    });
   });
 });
