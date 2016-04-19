@@ -59,7 +59,7 @@ Scope.prototype.$watchGroup = function(watchFns, listenerFn) {
     _.forEach(destroyFunctions, function(destroyFunction) {
       destroyFunction();
     });
-  }
+  };
 
 };
 Scope.prototype.$$postDigest = function(fn) {
@@ -148,7 +148,7 @@ Scope.prototype.$watch = function(watchFn, listenerFn, valueEq) {
       self.$$watchers.splice(index, 1);
       self.$$lastDirtyWatch = null;
     }
-  }
+  };
 };
 Scope.prototype.$$digestOnce = function() {
   var self = this;

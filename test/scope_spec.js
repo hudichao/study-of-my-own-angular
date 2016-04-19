@@ -1059,10 +1059,11 @@ describe("Scope", function() {
     it("digeset儿子", function() {
       var parent = new Scope();
       var child = parent.$new();
+      var child2 = child.$new();
 
       parent.aValue = "abc";
 
-      child.$watch(
+      child2.$watch(
         function(scope) {return scope.aValue;},
         function(newVal, oldVal, scope) {
           scope.aValueWas = newVal;
@@ -1071,8 +1072,54 @@ describe("Scope", function() {
 
       parent.$digest();
 
-      expect(child.aValueWas).toBe("abc");
+      expect(child2.aValueWas).toBe("abc");
 
+    });
+
+    it("$apply从顶层开始digest", function() {
+      var parent = new Scope();
+      var child = parent.$new();
+      var child2 = child.$new();
+
+      parent.aValue = "abc";
+      parent.counter = 0;
+
+      parent.$watch(
+        function(scope) {return scope.aValue;},
+        function(newVal, oldVal, scope) {
+          scope.counter++;
+        }
+      );
+
+      child2.$apply(function(scope) {});
+
+      expect(parent.counter).toBe(1);
+
+    });
+
+    it("从顶层触发$evalAsync", function(done) {
+      var parent = new Scope();
+      var child = parent.$new();
+      var child2 = child.$new();
+
+      parent.aValue = "abc";
+      parent.counter = 0;
+
+      parent.$watch(
+        function(scope) {return scope.aValue;},
+        function(newVal, oldVal, scope) {
+          scope.counter++;
+        }
+      );
+
+      child2.$evalAsync(function(scope) {
+
+      });
+
+      setTimeout(function() {
+        expect(parent.counter).toBe(1);
+        done();
+      }, 50);
     });
   });
 });

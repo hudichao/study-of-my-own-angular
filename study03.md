@@ -42,4 +42,5 @@ Recursive Digestion
 然后要能digest自己儿子。创建一个$$everyScope, 在每一个scope上执行function。
 更改$$digestOnce, $$lastDirtyWatch还是指向rootScope的。
 
-
+对$apply, $evalAsync, $applyAsync同样。
+能够触发顶层的digest。所以需有一个$root属性。
