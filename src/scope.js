@@ -16,6 +16,31 @@ function Scope() {
 function initWatchVal() {
 
 }
+Scope.prototype.$watchCollection = function(watchFn, listenerFn) {
+  var self = this;
+  var newVal;
+  var oldVal;
+  var changeCount = 0;
+
+  var internalWatchFn = function(scope) {
+    newVal = watchFn(scope);
+
+    //check for changes
+    if (!self.$$areEqual(newVal, oldVal, false)) {
+      changeCount++;
+    }
+
+    oldVal = newVal;
+
+    return changeCount;
+  };
+
+  var internalListenerFn = function() {
+    listenerFn(newVal, oldVal, self);
+  };
+
+  return this.$watch(internalWatchFn, internalListenerFn);
+};
 Scope.prototype.$$everyScope = function(fn) {
   if (fn(this)) {
     return this.$$children.every(function(child) {
