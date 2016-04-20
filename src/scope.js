@@ -31,6 +31,7 @@ Scope.prototype.$new = function(isolated, parent) {
   if (isolated) {
     child = new Scope();
     child.$root = parent.$root;
+    //这里用parent和this一样，反正queue是共享的。
     child.$$asyncQueue = parent.$$asyncQueue;
     child.$$postDigestQueue = parent.$$postDigestQueue;
     child.$$applyAsyncQueue = parent.$$applyAsyncQueue;
@@ -39,7 +40,7 @@ Scope.prototype.$new = function(isolated, parent) {
     ChildScope.prototype = this;
     child = new ChildScope();
   }
- 
+  // 只属于parent的children
   parent.$$children.push(child);
   child.$$watchers = [];
   child.$$children = [];
