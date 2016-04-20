@@ -1508,5 +1508,109 @@ describe("Scope", function() {
       scope.$digest();
       expect(scope.counter).toBe(2);
     });
+
+    it("检测到当变成object时", function() {
+      scope.counter = 0;
+
+      scope.$watchCollection(
+        function(scope) {return scope.obj;},
+        function(newVal, oldVal, scope) {
+          scope.counter++;
+        }
+      );
+
+      scope.$digest();
+      expect(scope.counter).toBe(1);
+
+      scope.obj = {a: 1};
+      scope.$digest();
+      expect(scope.counter).toBe(2);
+
+      scope.$digest();
+      expect(scope.counter).toBe(2);
+    });
+
+    it("检测到当object新增属性时", function() {
+      scope.counter = 0;
+      scope.obj = {a: 1};
+
+      scope.$watchCollection(
+        function(scope) {return scope.obj;},
+        function(newVal, oldVal, scope) {
+          scope.counter++;
+        }
+      );
+
+      scope.$digest();
+      expect(scope.counter).toBe(1);
+
+      scope.obj.b = 2;
+      scope.$digest();
+      expect(scope.counter).toBe(2);
+
+      scope.$digest();
+      expect(scope.counter).toBe(2);
+    });
+
+    it("检测到当object属性的value值改变时", function() {
+      scope.counter = 0;
+      scope.obj = {a: 1};
+
+      scope.$watchCollection(
+        function(scope) {return scope.obj;},
+        function(newVal, oldVal, scope) {
+          scope.counter++;
+        }
+      );
+
+      scope.$digest();
+      expect(scope.counter).toBe(1);
+
+      scope.obj.a = 2;
+      scope.$digest();
+      expect(scope.counter).toBe(2);
+
+      scope.$digest();
+      expect(scope.counter).toBe(2);
+    });
+
+    it("NaN不会挂", function() {
+      scope.counter = 0;
+      scope.obj = {a: NaN};
+
+      scope.$watchCollection(
+        function(scope) {
+          return scope.obj;
+        },
+        function(newVal, oldVal, scope) {
+          scope.counter++;
+        }
+      );
+
+      scope.$digest();
+      expect(scope.counter).toBe(1);
+    });
+
+    it("检测到当object属性的remove", function() {
+      scope.counter = 0;
+      scope.obj = {a: 1};
+
+      scope.$watchCollection(
+        function(scope) {return scope.obj;},
+        function(newVal, oldVal, scope) {
+          scope.counter++;
+        }
+      );
+
+      scope.$digest();
+      expect(scope.counter).toBe(1);
+
+      delete scope.obj.a;
+      scope.$digest();
+      expect(scope.counter).toBe(2);
+
+      scope.$digest();
+      expect(scope.counter).toBe(2);
+    });
   });
 });
