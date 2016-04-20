@@ -1612,5 +1612,99 @@ describe("Scope", function() {
       scope.$digest();
       expect(scope.counter).toBe(2);
     });
+
+    it("处理有length属性的object", function() {
+      scope.obj = {length: 42, otherKey: "fuk"};
+      scope.counter = 0;
+
+      scope.$watchCollection(
+        function(scope) {return scope.obj;},
+        function(newVal, oldVal, scope) {
+          scope.counter++;
+        }
+      );
+
+      scope.$digest();
+
+      scope.obj.newKey = "def";
+      scope.$digest();
+
+      expect(scope.counter).toBe(2);
+    });
+
+    it("把老的non-collection value给listener", function() {
+      scope.aValue = 42;
+      var oldValueGiven;
+
+      scope.$watchCollection(
+        function(scope) {return scope.aValue;},
+        function(newVal, oldVal, scope) {
+          oldValueGiven = oldVal;
+        }
+      );
+
+      scope.$digest();
+
+      scope.aValue = 43;
+      scope.$digest();
+
+      expect(oldValueGiven).toBe(42);
+    });
+
+    it("把老的array value给listener", function() {
+      scope.aValue = [1, 2, 3];
+      var oldValueGiven;
+
+      scope.$watchCollection(
+        function(scope) {return scope.aValue;},
+        function(newVal, oldVal, scope) {
+          oldValueGiven = oldVal;
+        }
+      );
+
+      scope.$digest();
+
+      scope.aValue.push(4);
+      scope.$digest();
+
+      expect(oldValueGiven).toEqual([1, 2, 3]);
+    });
+
+    it("把老的object value给listener", function() {
+      scope.aValue = {a: 1, b: 2};
+      var oldValueGiven;
+
+      scope.$watchCollection(
+        function(scope) {return scope.aValue;},
+        function(newVal, oldVal, scope) {
+          oldValueGiven = oldVal;
+        }
+      );
+
+      scope.$digest();
+
+      scope.aValue.c = 3;
+      scope.$digest();
+
+      expect(oldValueGiven).toEqual({a: 1, b: 2});
+    });
+
+    it("第一次digest时,把新的value作为老的value", function() {
+      scope.aValue = {a: 1, b: 2};
+      var oldValueGiven;
+
+      scope.$watchCollection(
+        function(scope) {return scope.aValue;},
+        function(newVal, oldVal, scope) {
+          oldValueGiven = oldVal;
+        }
+      );
+
+      scope.$digest();
+
+      expect(oldValueGiven).toEqual({a: 1, b: 2});
+    });
+
+
   });
 });

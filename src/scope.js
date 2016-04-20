@@ -21,14 +21,21 @@ function isArrayLike(obj) {
     return false;
   }
   var length = obj.length;
-  return _.isNumber(length);
+  return length === 0 || 
+  (_.isNumber(length) && length > 0 && (length - 1) in obj);
 }
 Scope.prototype.$watchCollection = function(watchFn, listenerFn) {
   var self = this;
   var newVal;
   var oldVal;
   var oldLength;
+  var veryOldValue;
+
+  //只有这时才track
+  var trackVeryOldValue = (listenerFn.length > 1);
+
   var changeCount = 0;
+  var firstRun = true;
 
   var internalWatchFn = function(scope) {
     newVal = watchFn(scope);
@@ -99,7 +106,16 @@ Scope.prototype.$watchCollection = function(watchFn, listenerFn) {
   };
 
   var internalListenerFn = function() {
-    listenerFn(newVal, oldVal, self);
+    if (firstRun) {
+      listenerFn(newVal, newVal, self);
+      firstRun = false;
+    } else {
+      listenerFn(newVal, veryOldValue, self);
+    }
+
+    if (trackVeryOldValue) {
+      veryOldValue = _.clone(newVal);
+    }
   };
 
   return this.$watch(internalWatchFn, internalListenerFn);

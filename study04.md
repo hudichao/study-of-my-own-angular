@@ -33,3 +33,8 @@ lodash
 
 ### 减少不必要的object 遍历
 
+### 处理有length属性的object
+
+需要保证listener函数中的oldValue正确，所以加一个veryOldValue。传给listener函数，而且只当显式声明有它时才需要。
+
+保证第一次时oldValue返回newValue
