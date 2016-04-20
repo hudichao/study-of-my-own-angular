@@ -55,3 +55,6 @@ $digest直接就可以了。但$apply和$evalAsync需要改。现在的isolate s
 ### 定制父scope
 保证原型爸爸的digest不会触发child的run。而阶层爸爸的digest会。
 
+### 销毁scope
+得先有一个爸爸属性。
+

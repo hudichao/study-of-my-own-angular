@@ -1254,5 +1254,34 @@ describe("Scope", function() {
       expect(child.counter).toBe(2);
 
     });
+
+    it("$destroy后不能再被digest", function() {
+      var parent = new Scope();
+      var child = parent.$new();
+
+      child.aValue = [1, 2, 3];
+      child.counter = 0;
+
+      child.$watch(
+        function(scope) {return scope.aValue;},
+        function(newVal, oldVal, scope) {
+          scope.counter++;
+        },
+        true
+      );
+
+      parent.$digest();
+      expect(child.counter).toBe(1);
+
+      child.aValue.push(4);
+      parent.$digest();
+      expect(child.counter).toBe(2);
+
+      child.$destroy();
+      child.aValue.push(5);
+
+      parent.$digest();
+      expect(child.counter).toBe(2);
+    });
   });
 });
