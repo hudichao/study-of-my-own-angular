@@ -1298,7 +1298,7 @@ describe("Scope", function() {
       scope.counter = 0;
 
       scope.$watchCollection(
-        function(scope) {return scope.aValue},
+        function(scope) {return scope.aValue;},
         function(newVal, oldVal, scope) {
           valueProvided = newVal;
           scope.counter++;
@@ -1333,7 +1333,28 @@ describe("Scope", function() {
 
       scope.$digest();
       expect(scope.counter).toBe(1);
-      
+
+    });
+
+    it("检测到变成array时", function() {
+      scope.counter = 0;
+
+      scope.$watchCollection(
+        function(scope) {return scope.arr;},
+        function(newVal, oldVal, scope) {
+          scope.counter++;
+        }
+      );
+
+      scope.$digest();
+      expect(scope.counter).toBe(1);
+
+      scope.arr = [1, 2, 3];
+      scope.$digest();
+      expect(scope.counter).toBe(2);
+
+      scope.$digest();
+      expect(scope.counter).toBe(2);
     });
   });
 });
