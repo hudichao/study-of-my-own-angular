@@ -28,3 +28,10 @@ scope来解耦publisher和subscriber。
 
 运行原理是，$emit或broadcat时，触发所有注册这个event的listener。
 
+### Event object
+
+给listener传的event object有name。
+
+jasmine spy的calls.mostRecent().args 代表最后一次运行的传参。
+
+需要保证给不同listener传的event是同一个。

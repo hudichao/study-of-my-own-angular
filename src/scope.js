@@ -26,9 +26,10 @@ function isArrayLike(obj) {
   (_.isNumber(length) && length > 0 && (length - 1) in obj);
 }
 Scope.prototype.$$fireEventOnScope = function(eventName) {
+  var event = {name: eventName};
   var listeners = this.$$listeners[eventName] || [];
   _.forEach(listeners, function(listener) {
-    listener();
+    listener(event);
   });
 }
 Scope.prototype.$emit = function(eventName) {

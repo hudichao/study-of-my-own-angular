@@ -1761,6 +1761,31 @@ describe("Scope", function() {
         expect(listener1).toHaveBeenCalled();
         expect(listener2).not.toHaveBeenCalled();
       });
+
+      it(method + "给listener传带有name属性的event object", function() {
+        var listener = jasmine.createSpy();
+        scope.$on("someEvent", listener);
+
+        scope[method]("someEvent");
+
+        expect(listener).toHaveBeenCalled();
+        expect(listener.calls.mostRecent().args[0].name).toEqual("someEvent");
+      });
+
+      it(method + "给每个listener传的是同一个event object", function() {
+        var listener1 = jasmine.createSpy();
+        var listener2 = jasmine.createSpy();
+
+        scope.$on("someEvent", listener1);
+        scope.$on("someEvent", listener2);
+
+        scope[method]("someEvent");
+
+        var event1 = listener1.calls.mostRecent().args[0];
+        var event2 = listener1.calls.mostRecent().args[0];
+
+        expect(event1).toBe(event2);
+      });
     });
 
   });
