@@ -68,6 +68,9 @@ concat合并数组 [a].concat([b,c]) -> [a,b,c]
 DOM事件 target（event发生地） currentTarget(listener绑的地方)
 Scope事件 targetScope(event发生地) currentScope(listener绑的地方
 
+对于currentScope，我们不能用Jasmine spy。currentScope会随着scope，变化。所以我们需要记录listener被执行时的每一个值。
+实现只是加一句话就ok。
+
 
 
 

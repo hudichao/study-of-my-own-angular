@@ -1907,12 +1907,49 @@ describe("Scope", function() {
       var childListener = jasmine.createSpy();
 
       scope.$on("someEvent", scopeListener);
-      child.$on("someEvent", parentListener);
+      child.$on("someEvent", childListener);
 
-      scope.$emit("someEvent");
+      scope.$broadcast("someEvent");
 
       expect(scopeListener.calls.mostRecent().args[0].targetScope).toBe(scope);
       expect(childListener.calls.mostRecent().args[0].targetScope).toBe(scope);
     });
+
+    it("$emit的currentScope。即listener on的地方", function() {
+      var currentScopeOnScope, currentScopeOnParent;
+      var scopeListener = function(event) {
+        currentScopeOnScope = event.currentScope;
+      };
+      var parentListener = function(event) {
+        currentScopeOnParent = event.currentScope;
+      };
+
+      scope.$on("someEvent", scopeListener);
+      parent.$on("someEvent", parentListener);
+
+      scope.$emit("someEvent");
+
+      expect(currentScopeOnScope).toBe(scope);
+      expect(currentScopeOnParent).toBe(parent);
+    });
+
+    it("$broadcast的currentScope。即listener on的地方", function() {
+      var currentScopeOnScope, currentScopeOnChild;
+      var scopeListener = function(event) {
+        currentScopeOnScope = event.currentScope;
+      };
+      var childListener = function(event) {
+        currentScopeOnChild = event.currentScope;
+      };
+
+      scope.$on("someEvent", scopeListener);
+      child.$on("someEvent", childListener);
+
+      scope.$broadcast("someEvent");
+
+      expect(currentScopeOnScope).toBe(scope);
+      expect(currentScopeOnChild).toBe(child);
+    });
+
   });
 });
