@@ -2033,5 +2033,16 @@ describe("Scope", function() {
 
       expect(listener).toHaveBeenCalled();
     });
+
+    it("对已经destroyed的，listener不再有效", function() {
+      var listener = jasmine.createSpy();
+      scope.$on("myEvent", listener);
+
+      scope.$destroy();
+
+      scope.$emit("myEvent");
+
+      expect(listener).not.toHaveBeenCalled();
+    });
   });
 });

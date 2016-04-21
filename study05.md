@@ -90,6 +90,9 @@ angular里面没有所谓default 行为。prevent default只会更改一个defau
 实现方式：在$destory时 broadcast $destroy事件。
 
 
+### 禁止已经destroy了的scope上的listener
+
+
 
 
 

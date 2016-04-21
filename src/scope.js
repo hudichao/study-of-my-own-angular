@@ -232,6 +232,8 @@ Scope.prototype.$destroy = function() {
     }
   }
   this.$$watchers = null;
+  this.$$listeners = {};
+  
 };
 Scope.prototype.$watchGroup = function(watchFns, listenerFn) {
   var self = this;
