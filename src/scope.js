@@ -47,6 +47,7 @@ Scope.prototype.$emit = function(eventName) {
     scope.$$fireEventOnScope(eventName, listenerArgs);
     scope = scope.$parent;
   } while (scope);
+  event.currentScope = null;
   return event;
 };
 Scope.prototype.$broadcast = function(eventName) {
@@ -60,7 +61,7 @@ Scope.prototype.$broadcast = function(eventName) {
   });
 
   // this.$$fireEventOnScope(eventName, listenerArgs);
-
+  event.currentScope = null;
   return event;
 };
 Scope.prototype.$on = function(eventName, listener) {

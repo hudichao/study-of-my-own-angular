@@ -1915,7 +1915,7 @@ describe("Scope", function() {
       expect(childListener.calls.mostRecent().args[0].targetScope).toBe(scope);
     });
 
-    it("$emit的currentScope。即listener on的地方", function() {
+    it("$emit的currentScope。被捕获时的位置。", function() {
       var currentScopeOnScope, currentScopeOnParent;
       var scopeListener = function(event) {
         currentScopeOnScope = event.currentScope;
@@ -1933,7 +1933,7 @@ describe("Scope", function() {
       expect(currentScopeOnParent).toBe(parent);
     });
 
-    it("$broadcast的currentScope。即listener on的地方", function() {
+    it("$broadcast的currentScope。被捕获时的位置。", function() {
       var currentScopeOnScope, currentScopeOnChild;
       var scopeListener = function(event) {
         currentScopeOnScope = event.currentScope;
@@ -1951,5 +1951,28 @@ describe("Scope", function() {
       expect(currentScopeOnChild).toBe(child);
     });
 
+    it("$emit的propogation结束后，将currentScope设为null", function() {
+      var event;
+      var scopeListener = function(evt) {
+        event = evt;
+      };
+      scope.$on("someEvent", scopeListener);
+
+      scope.$emit("someEvent");
+
+      expect(event.currentScope).toBe(null);
+    });
+
+    it("$broadcast的propogation结束后，将currentScope设为null", function() {
+      var event;
+      var scopeListener = function(evt) {
+        event = evt;
+      };
+      scope.$on("someEvent", scopeListener);
+
+      scope.$broadcast("someEvent");
+
+      expect(event.currentScope).toBe(null);
+    });
   });
 });
