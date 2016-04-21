@@ -1817,6 +1817,16 @@ describe("Scope", function() {
         expect(l).not.toHaveBeenCalled();
       });
 
+      it(method + "取消注册不会skip掉后面的listener", function() {
+        var deregister;
+        var listener = function() { deregister();
+        };
+        var nextListener = jasmine.createSpy();
+        deregister = scope.$on("someEvent" , listener);
+        scope.$on("someEvent" , nextListener);
+        scope[method]("someEvent");
+        expect(nextListener).toHaveBeenCalled();
+      });
     });
 
   });

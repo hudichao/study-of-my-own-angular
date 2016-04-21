@@ -29,11 +29,17 @@ Scope.prototype.$$fireEventOnScope = function(eventName, extraArgs) {
   var event = {name: eventName};
   var listenerArgs = [event].concat(extraArgs);
   var listeners = this.$$listeners[eventName] || [];
-  _.forEach(listeners, function(listener) {
-    listener.apply(null, listenerArgs);
-  });
+  var i = 0;
+  while (i < listeners.length) {
+    if (listeners[i] === null) {
+      listeners.splice(i, 1);
+    } else {
+      listeners[i].apply(null, listenerArgs);
+      i++
+    }
+  }
   return event;
-}
+};
 Scope.prototype.$emit = function(eventName) {
   var extraArgs = _.tail(arguments);
   return this.$$fireEventOnScope(eventName, extraArgs);
@@ -51,9 +57,10 @@ Scope.prototype.$on = function(eventName, listener) {
   return function() {
     var index = listeners.indexOf(listener);
     if (index >=0) {
-      listeners.splice(index, 1);
+      // listeners.splice(index, 1);
+      listeners[index] = null;
     }
-  }
+  };
 };
 Scope.prototype.$watchCollection = function(watchFn, listenerFn) {
   var self = this;

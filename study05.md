@@ -46,3 +46,7 @@ concat合并数组 [a].concat([b,c]) -> [a,b,c]
 
 
 一个坑。新的LODASH的_.rest变了，应该改为用_.tail
+
+取消注册。
+解决由于splice后数组长度变短，导致之后的那个listener不执行问题。
+解决方法：不再用splice，直接设为null。
