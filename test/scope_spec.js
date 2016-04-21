@@ -1857,5 +1857,36 @@ describe("Scope", function() {
       expect(scopeEvent).toBe(parentEvent);
     });
 
+    it("$broadcast往下传", function() {
+      var scopeListener = jasmine.createSpy();
+      var childListener = jasmine.createSpy();
+      var isolatedChildListener = jasmine.createSpy();
+
+      scope.$on("someEvent", scopeListener);
+      child.$on("someEvent", childListener);
+      isolatedChild.$on("someEvent", isolatedChildListener);
+
+      scope.$broadcast("someEvent");
+
+      expect(scopeListener).toHaveBeenCalled();
+      expect(childListener).toHaveBeenCalled();
+      expect(isolatedChildListener).toHaveBeenCalled();
+
+    });
+
+    it("$broadcast往下传的event是一个event", function() {
+      var scopeListener = jasmine.createSpy();
+      var childListener = jasmine.createSpy();
+
+      scope.$on("someEvent", scopeListener);
+      child.$on("someEvent", childListener);
+
+      scope.$broadcast("someEvent");
+
+      var scopeEvent = scopeListener.calls.mostRecent().args[0];
+      var childEvent = childListener.calls.mostRecent().args[0];
+
+      expect(scopeEvent).toBe(childEvent);
+    });
   });
 });

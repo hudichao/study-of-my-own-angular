@@ -54,3 +54,11 @@ concat合并数组 [a].concat([b,c]) -> [a,b,c]
 ### $emit
 
 重构$$fireEventOnScope
+
+### $broadcast
+
+深度优先地往下传
+
+重用$$everyScope
+
+从代码也能看到，$broadcast比$emit消耗性能的多。
