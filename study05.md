@@ -50,3 +50,7 @@ concat合并数组 [a].concat([b,c]) -> [a,b,c]
 取消注册。
 解决由于splice后数组长度变短，导致之后的那个listener不执行问题。
 解决方法：不再用splice，直接设为null。
+
+### $emit
+
+重构$$fireEventOnScope

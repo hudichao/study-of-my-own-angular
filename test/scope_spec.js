@@ -1829,5 +1829,33 @@ describe("Scope", function() {
       });
     });
 
+    it("$emit往上走", function() {
+      var parentListener = jasmine.createSpy();
+      var scopeListener = jasmine.createSpy();
+
+      parent.$on("someEvent", parentListener);
+      scope.$on("someEvent", scopeListener);
+
+      scope.$emit("someEvent");
+
+      expect(scopeListener).toHaveBeenCalled();
+      expect(parentListener).toHaveBeenCalled();
+    });
+
+    it("$emit，往上传的event是一个event", function() {
+      var parentListener = jasmine.createSpy();
+      var scopeListener = jasmine.createSpy();
+
+      parent.$on("someEvent", parentListener);
+      scope.$on("someEvent", scopeListener);
+
+      scope.$emit("someEvent");
+
+      var scopeEvent = scopeListener.calls.mostRecent().args[0];
+      var parentEvent = parentListener.calls.mostRecent().args[0];
+
+      expect(scopeEvent).toBe(parentEvent);
+    });
+
   });
 });
