@@ -87,7 +87,7 @@ Scope.prototype.$watchCollection = function(watchFn, listenerFn) {
           changeCount++;
           _.forOwn(oldVal, function(val, key) {
             if (!newVal.hasOwnProperty(key)) {
-              oldLength--
+              oldLength--;
               delete oldVal[key];
             }
           });

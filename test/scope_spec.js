@@ -1719,6 +1719,49 @@ describe("Scope", function() {
       isolatedChild = scope.$new(true);
     });
 
-    
+    it("允许注册listener", function() {
+      var listener1 = function() {};
+      var listener2 = function() {};
+      var listener3 = function() {};
+
+      scope.$on("someEvent", listener1);
+      scope.$on("someEvent", listener2);
+      scope.$on("someOtherEvent", listener3);
+
+      expect(scope.$$listeners).toEqual({
+        someEvent: [listener1, listener2],
+        someOtherEvent: [listener3]
+      });
+    });
+
+    it("对每个scope注册不同的listeners", function() {
+      var listener1 = function() {};
+      var listener2 = function() {};
+      var listener3 = function() {};
+
+      scope.$on("someEvent", listener1);
+      child.$on("someEvent", listener2);
+      isolatedChild.$on("someEvent", listener3);
+
+      expect(scope.$$listeners).toEqual({someEvent: [listener1]});
+      expect(child.$$listeners).toEqual({someEvent: [listener2]});
+      expect(isolatedChild.$$listeners).toEqual({someEvent: [listener3]});
+    });
+
+    _.forEach(["$emit", "$broadcast"], function(method) {
+      it(method + "触发event的listener", function() {
+        var listener1 = jasmine.createSpy();
+        var listener2 = jasmine.createSpy();
+
+        scope.$on("someEvent", listener1);
+        scope.$on("someOtherEvent", listener2);
+
+        scope[method]("someEvent");
+
+        expect(listener1).toHaveBeenCalled();
+        expect(listener2).not.toHaveBeenCalled();
+      });
+    });
+
   });
 });

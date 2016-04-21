@@ -10,6 +10,7 @@ function Scope() {
   this.$$postDigestQueue = [];
   this.$root = this;
   this.$$children = [];
+  this.$$listeners = {};
   this.$$phase = null;
 }
 
@@ -24,6 +25,25 @@ function isArrayLike(obj) {
   return length === 0 || 
   (_.isNumber(length) && length > 0 && (length - 1) in obj);
 }
+Scope.prototype.$$fireEventOnScope = function(eventName) {
+  var listeners = this.$$listeners[eventName] || [];
+  _.forEach(listeners, function(listener) {
+    listener();
+  });
+}
+Scope.prototype.$emit = function(eventName) {
+  this.$$fireEventOnScope(eventName);
+};
+Scope.prototype.$broadcast = function(eventName) {
+  this.$$fireEventOnScope(eventName);
+};
+Scope.prototype.$on = function(eventName, listener) {
+  var listeners = this.$$listeners[eventName];
+  if (!listeners) {
+    this.$$listeners[eventName] = listeners = [];
+  }
+  listeners.push(listener);
+};
 Scope.prototype.$watchCollection = function(watchFn, listenerFn) {
   var self = this;
   var newVal;
@@ -87,7 +107,7 @@ Scope.prototype.$watchCollection = function(watchFn, listenerFn) {
           changeCount++;
           _.forOwn(oldVal, function(val, key) {
             if (!newVal.hasOwnProperty(key)) {
-              oldLength--
+              oldLength--;
               delete oldVal[key];
             }
           });
@@ -147,6 +167,7 @@ Scope.prototype.$new = function(isolated, parent) {
   // 只属于parent的children
   parent.$$children.push(child);
   child.$$watchers = [];
+  child.$$listeners = {};
   child.$$children = [];
   child.$parent = parent;
   return child;
