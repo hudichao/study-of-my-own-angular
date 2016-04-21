@@ -1838,6 +1838,21 @@ describe("Scope", function() {
 
         expect(event.defaultPrevented).toBe(true);
       });
+
+      it(method + "exception 不会停止propogation", function() {
+        var listener1 = function(event) {
+          throw "listener1 throwing an exception";
+        };
+
+        var listener2 = jasmine.createSpy();
+
+        scope.$on("someEvent", listener1);
+        scope.$on("someEvent", listener2);
+
+        scope[method]("someEvent");
+
+        expect(listener2).toHaveBeenCalled();
+      });
     });
 
     it("$emit往上走", function() {

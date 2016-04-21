@@ -74,11 +74,13 @@ Scope事件 targetScope(event发生地) currentScope(listener绑的地方
 currentScope的值应该在event propogation结束时被设为null。
 
 ### 中止event propogation
+
 DOM有个stopPropagation。$emit也会有。但$broadcast没有。再次说明$broadcast的性能消耗大。
 
 一个flag记录是否已经被stopPropogation
 
 ### prevent default
+
 DOM事件有prevent default，比如在点击a时，浏览器不走link，但是click handler仍会被触发。
 
 同理，我们有prevent default。$emit 和 $broadcast都有。
@@ -91,6 +93,10 @@ angular里面没有所谓default 行为。prevent default只会更改一个defau
 
 
 ### 禁止已经destroy了的scope上的listener
+
+只要没有reference leak，被remove的子scope和它的listener很快会被GC。
+
+### 处理exception
 
 
 

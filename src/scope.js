@@ -33,7 +33,11 @@ Scope.prototype.$$fireEventOnScope = function(eventName, listenerArgs) {
     if (listeners[i] === null) {
       listeners.splice(i, 1);
     } else {
-      listeners[i].apply(null, listenerArgs);
+      try {
+        listeners[i].apply(null, listenerArgs);
+      } catch (e) {
+        console.error(e);
+      }
       i++;
     }
   }
@@ -233,7 +237,7 @@ Scope.prototype.$destroy = function() {
   }
   this.$$watchers = null;
   this.$$listeners = {};
-  
+
 };
 Scope.prototype.$watchGroup = function(watchFns, listenerFn) {
   var self = this;
