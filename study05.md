@@ -84,6 +84,10 @@ DOM事件有prevent default，比如在点击a时，浏览器不走link，但是
 同理，我们有prevent default。$emit 和 $broadcast都有。
 angular里面没有所谓default 行为。prevent default只会更改一个defaultPrevented属性。让其他directive可以用。比如angular的$locationService
 
+### broadcast scope removal
+
+当scope被摧毁时，fire $destroy事件。当一个scope destory时，它的儿子们也被destroy。
+实现方式：在$destory时 broadcast $destroy事件。
 
 
 

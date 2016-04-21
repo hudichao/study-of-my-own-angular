@@ -223,6 +223,7 @@ Scope.prototype.$new = function(isolated, parent) {
   return child;
 };
 Scope.prototype.$destroy = function() {
+  this.$broadcast("$destroy");
   if (this.$parent) {
     var siblings = this.$parent.$$children;
     var indexOfThis = siblings.indexOf(this);
