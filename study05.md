@@ -62,3 +62,13 @@ concat合并数组 [a].concat([b,c]) -> [a,b,c]
 重用$$everyScope
 
 从代码也能看到，$broadcast比$emit消耗性能的多。
+
+### 在当前event object中包含当前和目标scope
+
+DOM事件 target（event发生地） currentTarget(listener绑的地方)
+Scope事件 targetScope(event发生地) currentScope(listener绑的地方
+
+
+
+
+

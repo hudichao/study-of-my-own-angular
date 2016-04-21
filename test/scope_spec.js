@@ -1888,5 +1888,31 @@ describe("Scope", function() {
 
       expect(scopeEvent).toBe(childEvent);
     });
+
+    it("$emit的发生地", function() {
+      var scopeListener = jasmine.createSpy();
+      var parentListener = jasmine.createSpy();
+
+      scope.$on("someEvent", scopeListener);
+      parent.$on("someEvent", parentListener);
+
+      scope.$emit("someEvent");
+
+      expect(scopeListener.calls.mostRecent().args[0].targetScope).toBe(scope);
+      expect(parentListener.calls.mostRecent().args[0].targetScope).toBe(scope);
+    });
+
+    it("$broadcast的发生地targetScope", function() {
+      var scopeListener = jasmine.createSpy();
+      var childListener = jasmine.createSpy();
+
+      scope.$on("someEvent", scopeListener);
+      child.$on("someEvent", parentListener);
+
+      scope.$emit("someEvent");
+
+      expect(scopeListener.calls.mostRecent().args[0].targetScope).toBe(scope);
+      expect(childListener.calls.mostRecent().args[0].targetScope).toBe(scope);
+    });
   });
 });
