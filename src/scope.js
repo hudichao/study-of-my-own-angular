@@ -39,14 +39,21 @@ Scope.prototype.$$fireEventOnScope = function(eventName, listenerArgs) {
   }
 };
 Scope.prototype.$emit = function(eventName) {
-  var event = {name: eventName, targetScope: this};
+  var propogationStopped = false;
+  var event = {
+    name: eventName, 
+    targetScope: this,
+    stopPropogation: function() {
+      propogationStopped = true;
+    }
+  };
   var listenerArgs = [event].concat(_.tail(arguments));
   var scope = this;
   do {
     event.currentScope = scope;
     scope.$$fireEventOnScope(eventName, listenerArgs);
     scope = scope.$parent;
-  } while (scope);
+  } while (scope && !propogationStopped);
   event.currentScope = null;
   return event;
 };

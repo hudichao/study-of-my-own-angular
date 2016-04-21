@@ -1974,5 +1974,33 @@ describe("Scope", function() {
 
       expect(event.currentScope).toBe(null);
     });
+
+    it("当终止后不再propagate给爸爸", function() {
+      var scopeListener = function(event) {
+        event.stopPropagation();
+      };
+      var parentListener = jasmine.createSpy();
+
+      scope.$on("someEvent", scopeListener);
+      parent.$on("someEvent", parentListener);
+
+      scope.$emit("someEvent");
+
+      expect(parentListener).not.toHaveBeenCalled();
+    });
+
+    it("当终止后当前scope的剩余listener仍然能接受到", function() {
+      var listener1 = function(event) {
+        event.stopPropagation();
+      };
+      var listener2 = jasmine.createSpy();
+
+      scope.$on("someEvent", listener1);
+      scope.$on("someEvent", listener2);
+
+      scope.$emit("someEvent");
+
+      expect(listener2).toHaveBeenCalled();
+    });
   });
 });

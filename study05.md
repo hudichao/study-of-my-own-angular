@@ -73,7 +73,10 @@ Scope事件 targetScope(event发生地) currentScope(listener绑的地方
 
 currentScope的值应该在event propogation结束时被设为null。
 
+### 中止event propogation
+DOM有个stopPropagation。$emit也会有。但$broadcast没有。再次说明$broadcast的性能消耗大。
 
+一个flag记录是否已经被stopPropogation
 
 
 
