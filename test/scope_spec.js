@@ -1827,6 +1827,17 @@ describe("Scope", function() {
         scope[method]("someEvent");
         expect(nextListener).toHaveBeenCalled();
       });
+
+      it("当preventDefault设置时，设置defaultPrevented属性", function() {
+        var listener = function(event) {
+          event.preventDefault();
+        };
+        scope.$on("someEvent", listener);
+
+        var event = scope[method]("someEvent");
+
+        expect(event.defaultPrevented).toBe(true);
+      });
     });
 
     it("$emit往上走", function() {
@@ -1977,7 +1988,7 @@ describe("Scope", function() {
 
     it("当终止后不再propagate给爸爸", function() {
       var scopeListener = function(event) {
-        event.stopPropagation();
+        event.stopPropogation();
       };
       var parentListener = jasmine.createSpy();
 
@@ -1991,7 +2002,7 @@ describe("Scope", function() {
 
     it("当终止后当前scope的剩余listener仍然能接受到", function() {
       var listener1 = function(event) {
-        event.stopPropagation();
+        event.stopPropogation();
       };
       var listener2 = jasmine.createSpy();
 

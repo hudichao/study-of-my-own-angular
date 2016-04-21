@@ -78,5 +78,14 @@ DOM有个stopPropagation。$emit也会有。但$broadcast没有。再次说明$b
 
 一个flag记录是否已经被stopPropogation
 
+### prevent default
+DOM事件有prevent default，比如在点击a时，浏览器不走link，但是click handler仍会被触发。
+
+同理，我们有prevent default。$emit 和 $broadcast都有。
+angular里面没有所谓default 行为。prevent default只会更改一个defaultPrevented属性。让其他directive可以用。比如angular的$locationService
+
+
+
+
 
 
