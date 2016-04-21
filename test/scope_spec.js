@@ -1786,6 +1786,37 @@ describe("Scope", function() {
 
         expect(event1).toBe(event2);
       });
+
+      it(method + "传其他参数", function() {
+        var listener = jasmine.createSpy();
+        scope.$on("someEvent", listener);
+
+        scope[method]("someEvent", "what", ["the", "fuck"], '...');
+
+        expect(listener.calls.mostRecent().args[1]).toEqual("what");
+        expect(listener.calls.mostRecent().args[2]).toEqual(["the", "fuck"]);
+        expect(listener.calls.mostRecent().args[3]).toEqual("...");
+      });
+
+      it(method + "返回event object", function() {
+        var returnedEvent = scope[method]("someEvent");
+
+        expect(returnedEvent).toBeDefined();
+        expect(returnedEvent.name).toEqual("someEvent");
+      });
+
+      it(method + "可以取消注册", function() {
+        var l = jasmine.createSpy();
+
+        var deregister = scope.$on("someEvent", l);
+
+        deregister();
+
+        scope[method]("someEvent");
+
+        expect(l).not.toHaveBeenCalled();
+      });
+
     });
 
   });

@@ -35,3 +35,14 @@ scope来解耦publisher和subscriber。
 jasmine spy的calls.mostRecent().args 代表最后一次运行的传参。
 
 需要保证给不同listener传的event是同一个。
+
+### 其他listener参数
+
+LODASH的_.rest(arguments)返回除了第一个之外的函数arguments所组成的array
+
+concat合并数组 [a].concat([b,c]) -> [a,b,c]
+使用apply将新的listenerArgs传到listener里去。
+否则传参就是一个数组了。
+
+
+一个坑。新的LODASH的_.rest变了，应该改为用_.tail

@@ -25,18 +25,22 @@ function isArrayLike(obj) {
   return length === 0 || 
   (_.isNumber(length) && length > 0 && (length - 1) in obj);
 }
-Scope.prototype.$$fireEventOnScope = function(eventName) {
+Scope.prototype.$$fireEventOnScope = function(eventName, extraArgs) {
   var event = {name: eventName};
+  var listenerArgs = [event].concat(extraArgs);
   var listeners = this.$$listeners[eventName] || [];
   _.forEach(listeners, function(listener) {
-    listener(event);
+    listener.apply(null, listenerArgs);
   });
+  return event;
 }
 Scope.prototype.$emit = function(eventName) {
-  this.$$fireEventOnScope(eventName);
+  var extraArgs = _.tail(arguments);
+  return this.$$fireEventOnScope(eventName, extraArgs);
 };
 Scope.prototype.$broadcast = function(eventName) {
-  this.$$fireEventOnScope(eventName);
+  var extraArgs = _.tail(arguments);
+  return this.$$fireEventOnScope(eventName, extraArgs);
 };
 Scope.prototype.$on = function(eventName, listener) {
   var listeners = this.$$listeners[eventName];
@@ -44,6 +48,12 @@ Scope.prototype.$on = function(eventName, listener) {
     this.$$listeners[eventName] = listeners = [];
   }
   listeners.push(listener);
+  return function() {
+    var index = listeners.indexOf(listener);
+    if (index >=0) {
+      listeners.splice(index, 1);
+    }
+  }
 };
 Scope.prototype.$watchCollection = function(watchFn, listenerFn) {
   var self = this;
