@@ -18,3 +18,7 @@ lexer -> ast builder -> ast compiler -> parser
 lexer: "a+b" => a,+,b
 
 ast(abstract syntax tree)
+
+W054: JSHint warning code 『the function constructor is a form of eval』
+
+
