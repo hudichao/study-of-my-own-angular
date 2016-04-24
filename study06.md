@@ -27,3 +27,6 @@ e相关的，本来js就支持，直接让js搞就行了。
 
 但是这样会导致parse一些不该parse的 ---> 导入exp operator
 
+parse 字符串
+
+需要AST compiler 能 escape 字符串。

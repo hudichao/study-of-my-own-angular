@@ -1,5 +1,7 @@
 'use strict';
 
+var _ = require("lodash");
+
 function parse(expr) {
   var lexer = new Lexer();
   var parser = new Parser(lexer);
@@ -21,7 +23,11 @@ Lexer.prototype.lex = function(text) {
     this.ch = this.text.charAt(this.index);
     if (this.isNumber(this.ch) || (this.ch === "." && this.isNumber(this.peek()))) {
       this.readNumber();
-    } else {
+    } 
+    else if (this.ch === "'" || this.ch === '"') {
+      this.readString();
+    }
+    else {
       throw "unexpected next character: " + this.ch;
     }
   }
@@ -42,6 +48,31 @@ Lexer.prototype.isExpOperator = function(ch) {
 };
 Lexer.prototype.isNumber = function(ch) {
   return '0' <= ch && ch <= '9';
+};
+Lexer.prototype.readString = function() {
+  this.index++; // 忽略开头的引号
+  var string = '';
+
+  while (this.index < this.text.length) {
+    var ch = this.text.charAt(this.index);
+
+    // 如果碰到最后的引号
+    if (ch === '\'' || ch == '"') {
+      this.index++;
+      this.tokens.push({
+        text: string,
+        value: string
+      });
+      return;
+    } 
+    else {
+      string += ch;
+    }
+    this.index++;
+  }
+
+  // 如果到死没碰到结尾的引号
+  throw "unmated quote";
 };
 Lexer.prototype.readNumber = function() {
   var number = "";
@@ -113,7 +144,16 @@ ASTCompiler.prototype.recurse = function(ast) {
       this.state.body.push("return ", this.recurse(ast.body), ';');
       break;
     case AST.Literal:
-      return ast.value;
+      return this.escape(ast.value);
+  }
+};
+
+//当是字符串时，两侧加引号
+ASTCompiler.prototype.escape = function(value) {
+  if (_.isString(value)) {
+    return '\'' + value + '\'';
+  } else {
+    return value;
   }
 };
 

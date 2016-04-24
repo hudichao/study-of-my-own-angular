@@ -44,4 +44,14 @@ describe("parse", function() {
     expect(function() {parse("42e-");}).toThrow();
     expect(function() {parse("42e-a");}).toThrow();
   });
+
+  it("parse双引号内的string", function() {
+    var fn = parse('"fuck"');
+    expect(fn()).toBe("fuck");
+  });
+
+  it("parse单引号内的string", function() {
+    var fn = parse("'fuck'");
+    expect(fn()).toBe('fuck');
+  });
 });
