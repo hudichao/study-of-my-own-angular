@@ -8,6 +8,16 @@ describe("parse", function() {
 
     expect(fn).toBeDefined();
     expect(fn()).toBe(42);
-    console.log(fn.toString());
+  });
+
+  it("parse float", function() {
+    var fn = parse("4.2");
+    expect(fn()).toBe(4.2);
+  });
+
+  it("parse没有整数的小数", function() {
+    var fn = parse(".42");
+    expect(fn()).toBe(0.42);
+
   });
 });

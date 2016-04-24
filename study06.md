@@ -21,4 +21,5 @@ ast(abstract syntax tree)
 
 W054: JSHint warning code 『the function constructor is a form of eval』
 
+在lex中加一个peek函数，读取下一个char的值
 

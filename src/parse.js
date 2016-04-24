@@ -19,7 +19,7 @@ Lexer.prototype.lex = function(text) {
 
   while (this.index < this.text.length) {
     this.ch = this.text.charAt(this.index);
-    if (this.isNumber(this.ch)) {
+    if (this.isNumber(this.ch) || (this.ch === "." && this.isNumber(this.peek()))) {
       this.readNumber();
     } else {
       throw "unexpected next character: " + this.ch;
@@ -28,6 +28,16 @@ Lexer.prototype.lex = function(text) {
 
   return this.tokens;
 };
+Lexer.prototype.peek = function() {
+  var output;
+  if (this.index < this.text.length) {
+    output = this.text.charAt(this.index + 1);
+  } else {
+    output = false;
+  }
+  return output;
+};
+
 Lexer.prototype.isNumber = function(ch) {
   return '0' <= ch && ch <= '9';
 };
@@ -35,7 +45,7 @@ Lexer.prototype.readNumber = function() {
   var number = "";
   while (this.index < this.text.length) {
     var ch = this.text.charAt(this.index);
-    if (this.isNumber(ch)) {
+    if (ch === "." || this.isNumber(ch)) {
       number += ch;
     } else {
       break;
