@@ -54,4 +54,8 @@ describe("parse", function() {
     var fn = parse("'fuck'");
     expect(fn()).toBe('fuck');
   });
+
+  it("不会parse mismatched quotes", function() {
+    expect(function() {parse('"abc\'');}).toThrow();
+  });
 });

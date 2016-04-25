@@ -25,7 +25,7 @@ Lexer.prototype.lex = function(text) {
       this.readNumber();
     } 
     else if (this.ch === "'" || this.ch === '"') {
-      this.readString();
+      this.readString(this.ch);
     }
     else {
       throw "unexpected next character: " + this.ch;
@@ -49,7 +49,7 @@ Lexer.prototype.isExpOperator = function(ch) {
 Lexer.prototype.isNumber = function(ch) {
   return '0' <= ch && ch <= '9';
 };
-Lexer.prototype.readString = function() {
+Lexer.prototype.readString = function(quote) {
   this.index++; // 忽略开头的引号
   var string = '';
 
@@ -57,7 +57,7 @@ Lexer.prototype.readString = function() {
     var ch = this.text.charAt(this.index);
 
     // 如果碰到最后的引号
-    if (ch === '\'' || ch == '"') {
+    if (ch === quote) {
       this.index++;
       this.tokens.push({
         text: string,
