@@ -58,4 +58,14 @@ describe("parse", function() {
   it("不会parse mismatched quotes", function() {
     expect(function() {parse('"abc\'');}).toThrow();
   });
+
+  it("可以parse含单引号的", function() {
+    var fn = parse("'a\\\'b'");
+    expect(fn()).toEqual('a\'b');
+  });
+
+  it("可以parse含双引号的", function() {
+    var fn = parse('"a\\\"b"');
+    expect(fn()).toEqual('a\"b');
+  });
 });

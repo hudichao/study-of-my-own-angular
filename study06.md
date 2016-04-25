@@ -32,3 +32,23 @@ parse 字符串
 需要AST compiler 能 escape 字符串。
 
 需要对起始和结束引号更严格。
+
+两种需要支持的escape character。
+
+新行 \n 
+form feed \f
+carriage return \r
+horizontal tab \t
+verical tab \v
+单引号 \'
+双引号 \"
+
+unicode escape character 。以\u开头的四字16进制字符。
+
+
+
+
+
+
+
+

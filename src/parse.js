@@ -2,6 +2,8 @@
 
 var _ = require("lodash");
 
+
+var ESCAPES =  {'n': '\n', 'f': '\f', 'r': '\r', 't': '\t', 'v': '\v', '\'': '\'', '"': '"'};
 function parse(expr) {
   var lexer = new Lexer();
   var parser = new Parser(lexer);
@@ -52,19 +54,31 @@ Lexer.prototype.isNumber = function(ch) {
 Lexer.prototype.readString = function(quote) {
   this.index++; // 忽略开头的引号
   var string = '';
-
+  var escape = false;
   while (this.index < this.text.length) {
     var ch = this.text.charAt(this.index);
 
+    if (escape) {
+      var replacement = ESCAPES[ch];
+      if (replacement) {
+        string += replacement;
+      } else {
+        string += ch;
+      }
+      escape = false;
+    }
     // 如果碰到最后的引号
-    if (ch === quote) {
+    else if (ch === quote) {
       this.index++;
       this.tokens.push({
         text: string,
         value: string
       });
       return;
-    } 
+    }
+    else if (ch === '\\') {
+      escape = true;
+    }
     else {
       string += ch;
     }
@@ -151,12 +165,15 @@ ASTCompiler.prototype.recurse = function(ast) {
 //当是字符串时，两侧加引号
 ASTCompiler.prototype.escape = function(value) {
   if (_.isString(value)) {
-    return '\'' + value + '\'';
+    return '\'' + value.replace(this.stringEscapeRegex, this.stringEscapeFn) + '\'';
   } else {
     return value;
   }
 };
-
+ASTCompiler.prototype.stringEscapeRegex = /[^ a-zA-Z0-9]/g;
+ASTCompiler.prototype.stringEscapeFn = function(c) {
+  return '\\u' + ('0000' + c.charCodeAt(0).toString(16)).slice(-4);
+};
 function Parser(lexer) {
   this.lexer = lexer;
   this.ast = new AST(this.lexer);
