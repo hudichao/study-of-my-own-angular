@@ -74,7 +74,11 @@ peek和expect的差别在于，不会consume当前token。
 
 空object
 
+非空object
 
+key的引号省略的情况。加一个新的Identifer的AST type
+
+下一章将使expression能使用scope属性。
 
 
 
