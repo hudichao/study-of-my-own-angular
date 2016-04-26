@@ -48,6 +48,10 @@ unicode escape character 。以\u开头的四字16进制字符。
 步骤：
 看/后面是不是u，如果是，去后面4个字符。把它们parse成16进制数字。通过内置String.fromCharCode，转换为字符。
 
+### 增加对boolean的支持
+
+true, false, null 他们为identifier token。意思是他们只是字母的字符串。
+
 
 
 

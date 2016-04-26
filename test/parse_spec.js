@@ -76,6 +76,21 @@ describe("parse", function() {
   it("对不正常的unicode，抛出异常", function() {
     expect(function() {parse('"\\u00T0"');}).toThrow();
   });
+
+  it("parse null", function() {
+    var fn = parse("null");
+    expect(fn()).toBe(null);
+  });
+
+  it("parse true", function() {
+    var fn = parse("true");
+    expect(fn()).toBe(true);
+  });
+
+  it("parse false", function() {
+    var fn = parse("false");
+    expect(fn()).toBe(false);
+  });
 });
 
 
