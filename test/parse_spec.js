@@ -68,4 +68,24 @@ describe("parse", function() {
     var fn = parse('"a\\\"b"');
     expect(fn()).toEqual('a\"b');
   });
+
+  it("parse unicode string", function() {
+    var fn = parse('"\\u00A0"');
+    expect(fn()).toEqual('\u00A0');
+  });
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

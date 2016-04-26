@@ -45,6 +45,8 @@ verical tab \v
 
 unicode escape character 。以\u开头的四字16进制字符。
 
+步骤：
+看/后面是不是u，如果是，去后面4个字符。把它们parse成16进制数字。通过内置String.fromCharCode，转换为字符。
 
 
 
