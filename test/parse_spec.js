@@ -96,6 +96,11 @@ describe("parse", function() {
     var fn = parse(' \n42 ');
     expect(fn()).toEqual(42);
   });
+
+  it("parse空数组", function() {
+    var fn = parse("[]");
+    expect(fn()).toEqual([]);
+  });
 });
 
 

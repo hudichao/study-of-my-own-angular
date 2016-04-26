@@ -54,8 +54,13 @@ true, false, null 他们为identifier token。意思是他们只是字母的字�
 
 ### parse whitespace
 
+### parse array
 
 
+multi-token expression
+
+expect 
+consume
 
 
 
