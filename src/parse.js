@@ -61,6 +61,9 @@ Lexer.prototype.readString = function(quote) {
     if (escape) {
       if (ch === 'u') {
         var hex = this.text.substring(this.index + 1, this.index + 5);
+        if (!hex.match(/[\da-f]{4}/i)) {
+          throw "invalid unicode escape";
+        }
         this.index += 4;
         string += String.fromCharCode(parseInt(hex, 16));
       } else {

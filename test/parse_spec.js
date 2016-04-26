@@ -73,6 +73,9 @@ describe("parse", function() {
     var fn = parse('"\\u00A0"');
     expect(fn()).toEqual('\u00A0');
   });
+  it("对不正常的unicode，抛出异常", function() {
+    expect(function() {parse('"\\u00T0"');}).toThrow();
+  });
 });
 
 
