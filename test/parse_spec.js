@@ -106,6 +106,11 @@ describe("parse", function() {
     var fn = parse('[1, "two", [3], true]');
     expect(fn()).toEqual([1, 'two', [3], true]);
   });
+
+  it("parse空object", function() {
+    var fn = parse("{}");
+    expect(fn()).toEqual({});
+  });
 });
 
 

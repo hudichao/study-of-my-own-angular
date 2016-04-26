@@ -70,6 +70,12 @@ peek和expect的差别在于，不会consume当前token。
 又是lodash坑我。现在lodash的_map没有第三个传参。
 
 
+### parse object
+
+空object
+
+
+
 
 
 
