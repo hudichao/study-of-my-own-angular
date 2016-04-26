@@ -111,6 +111,11 @@ describe("parse", function() {
     var fn = parse("{}");
     expect(fn()).toEqual({});
   });
+
+  it("parse非空object", function() {
+    var fn = parse('{"a key": 1, \'another-key\': 2}');
+    expect(fn()).toEqual({'a key': 1, 'another-key': 2});
+  });
 });
 
 
