@@ -32,6 +32,9 @@ Lexer.prototype.lex = function(text) {
     else if (this.isIdent(this.ch)) {
       this.readIdent();
     }
+    else if (this.isWhitespace(this.ch)) {
+      this.index++;
+    }
     else {
       throw "unexpected next character: " + this.ch;
     }
@@ -60,6 +63,13 @@ Lexer.prototype.isIdent = function(ch) {
   var c = (ch === "_" && ch === "$");
   return a || b || c;
 };
+Lexer.prototype.isWhitespace = function(ch) {
+  if ([' ', '\r', '\t', '\n', '\v', '\u00A0'].indexOf(ch) > -1) {
+    return true;
+  } else {
+    return false;
+  }
+}
 Lexer.prototype.readIdent = function() {
   var text = "";
   while (this.index < this.text.length) {

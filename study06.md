@@ -52,6 +52,12 @@ unicode escape character 。以\u开头的四字16进制字符。
 
 true, false, null 他们为identifier token。意思是他们只是字母的字符串。
 
+### parse whitespace
+
+
+
+
+
 
 
 
