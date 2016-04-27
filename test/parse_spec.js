@@ -160,6 +160,26 @@ describe("parse", function() {
     expect(fn()).toBeUndefined();
   });
 
+  it("当有matching key时使用locals", function() {
+    var fn = parse("aKey");
+    var scope = {aKey: 42};
+    var locals = {aKey: 43};
+    expect(fn(scope, locals)).toBe(43);
+  });
+
+  it("当没有matching key时不使用locals", function() {
+    var fn = parse("aKey");
+    var scope = {aKey: 42};
+    var locals = {otherKey: 43};
+    expect(fn(scope, locals)).toBe(42);
+  });
+
+  it("只要第一个部分match就用locals", function() {
+    var fn = parse("aKey.anotherKey");
+    var scope = {aKey: {anotherKey: 42}};
+    var locals = {aKey: {}};
+    expect(fn(scope, locals)).toBeUndefined();
+  });
 });
 
 

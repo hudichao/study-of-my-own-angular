@@ -75,3 +75,9 @@ function(s) {
 }
 ```
 
+### locals
+
+第二个传参，优先看这个locale object。 比如ng-click就用到了$event
+
+local有值就用local。
+
