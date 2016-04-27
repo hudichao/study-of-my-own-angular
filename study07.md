@@ -20,3 +20,58 @@ nonComputedMember a.b 而不是a[b]
 
 一个问题看了半小时没看出来。最后发现是因为case AST.Identifier:中写死return "v0"了
 
+#### 多层
+
+产生这样的ast
+
+
+{
+    type: AST.Program,
+    body: {
+        type: AST.MemberExpression,
+        property: {
+            type: AST.Identifier,
+            name: 'fourthKey'
+        },
+        object: {
+            type: AST.MemberExpresion,
+            property: {
+                type: AST.Identifier,
+                name: 'thirdKey'
+            },
+            object: {
+                type: AST.MemberExpression,
+                property: {
+                    type: AST.Identifier,
+                    name: 'secondKey'
+                },
+                object: {
+                    type: AST.Identifier,
+                    name: aKey
+                }
+            }
+        }
+    }
+}
+
+返回这样的函数
+
+```javascript
+function(s) {
+  var v0,v1,v2,v3;
+  if (s) {
+    v3 = s.aKey;
+  }
+  if (v3) {
+    v2 = v3.secondKey;
+  }
+  if (v2) {
+    v1 = v2.thirdKey;
+  }
+  if (v1) {
+    v0 = v1.fourthKey;
+  }
+  return v0;
+}
+```
+

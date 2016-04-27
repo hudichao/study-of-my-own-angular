@@ -151,6 +151,15 @@ describe("parse", function() {
     var fn = parse('{aKey: 42}.aKey');
     expect(fn()).toBe(42);
   });
+
+  it("多层", function() {
+    var fn = parse('aKey.secondKey.thirdKey.fourthKey');
+    expect(fn({aKey: {secondKey: {thirdKey: {fourthKey: 42}}}})).toBe(42); 
+    expect(fn({aKey: {secondKey: {thirdKey: {}}}})).toBeUndefined(); 
+    expect(fn({aKey: {}})).toBeUndefined();
+    expect(fn()).toBeUndefined();
+  });
+
 });
 
 
