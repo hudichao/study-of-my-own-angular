@@ -127,6 +127,11 @@ describe("parse", function() {
     expect(fn({aKey: 42})).toBe(42);
     expect(fn({})).toBeUndefined();
   });
+
+  it("查找undefined的属性返回undefined,而不是报错", function() {
+    var fn = parse("aKey");
+    expect(fn()).toBeUndefined();
+  });
 });
 
 
