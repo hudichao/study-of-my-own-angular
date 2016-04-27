@@ -206,6 +206,9 @@ AST.prototype.primary = function() {
   else if (this.constants.hasOwnProperty(this.tokens[0].text)) {
     return this.constants[this.consume().text]; 
   } 
+  else if (this.peek().identifier) {
+    return this.identifier();
+  }
   else {
     return this.constant(); 
   }
@@ -281,7 +284,7 @@ ASTCompiler.prototype.compile = function(text) {
   this.recurse(ast);
 
   /* jshint -W054 */
-  return new Function(this.state.body.join(""));
+  return new Function('s', this.state.body.join(""));
   /* jshint +W054 */
 };
 ASTCompiler.prototype.recurse = function(ast) {
@@ -311,9 +314,13 @@ ASTCompiler.prototype.recurse = function(ast) {
         return key + ":" + value;
       });
       return '{' + properties.join(",") + '}';
+    case AST.Identifier: 
+      return this.nonComputedMember('s', ast.name);
   }
 };
-
+ASTCompiler.prototype.nonComputedMember = function(left, right) {
+  return '(' + left + ').' + right;
+};
 //当是字符串时，两侧加引号
 ASTCompiler.prototype.escape = function(value) {
   if (_.isString(value)) {
