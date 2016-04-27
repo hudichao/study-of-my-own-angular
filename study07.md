@@ -18,3 +18,5 @@ nonComputedMember a.b 而不是a[b]
 
 ### parse this
 
+一个问题看了半小时没看出来。最后发现是因为case AST.Identifier:中写死return "v0"了
+

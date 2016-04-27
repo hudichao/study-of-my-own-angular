@@ -139,6 +139,18 @@ describe("parse", function() {
     expect(fn(scope)).toBe(scope);
     expect(fn()).toBeUndefined();
   });
+
+  it("双层nested look up", function() {
+    var fn = parse("aKey.anotherKey");
+    expect(fn({aKey: {anotherKey: 42}})).toBe(42);
+    expect(fn({aKey: {}})).toBeUndefined();
+    expect(fn({})).toBeUndefined();
+  });
+
+  it("从一个object返回member", function() {
+    var fn = parse('{aKey: 42}.aKey');
+    expect(fn()).toBe(42);
+  });
 });
 
 
