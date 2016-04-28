@@ -1,7 +1,7 @@
 'use strict';
 
 var parse = require("../src/parse");
-
+var _ = require("lodash");
 describe("parse", function() {
   it("parse整数", function() {
     var fn = parse("42");
@@ -183,7 +183,7 @@ describe("parse", function() {
 
   it("parse 简单的computed property", function() {
     var fn = parse('aKey["anotherKey"]');
-    expect(fn({aKey: {anotherKey: 42}}))
+    expect(fn({aKey: {anotherKey: 42}}));
   });
 
   it("parse computed array", function() {
@@ -204,6 +204,33 @@ describe("parse", function() {
   it("parse function", function() {
     var fn = parse("aFunction()");
     expect(fn({aFunction: function() {return 42;}})).toBe(42);
+  });
+
+  it("parse带一个数字传参函数", function() {
+    var fn = parse("aFunction(42)");
+    expect(fn({aFunction: function(n) {return n;}})).toBe(42);
+  });
+
+  it("parse带一个identifer参数的函数", function() {
+    var fn = parse("aFunction(n)");
+    expect(fn({n: 42, aFunction: function(arg) {return arg;}})).toBe(42);
+  });
+
+  it("parse传参为函数结果的函数", function() {
+    var fn = parse("aFunction(argFn())");
+    expect(fn({
+      argFn: _.constant(42),
+      aFunction: function(arg) {return arg;}
+    })).toBe(42);
+  });
+
+  it("有多个参数的function call", function() {
+    var fn = parse("aFunction(37, n, argFn())");
+    expect(fn({
+      n: 3,
+      argFn: _.constant(2),
+      aFunction: function(a1, a2, a3) {return a1 + a2 + a3;}
+    })).toBe(42);
   });
 });
 

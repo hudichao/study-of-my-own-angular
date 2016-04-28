@@ -89,6 +89,9 @@ local有值就用local。
 function callss 由primary ast nodes处理，就和property access一样。在ast.primary的while循环
 中，当看到(时，生成CallExpression node。并把之前的primary表达式设为callee(即要执行的function)
 
+生成ast是，我们要parse所有括号内的参数。parseArguments方法：和读取array中的literal方法一样，除了不支持尾逗号。
+在compile时候，recurse每个参数，并将结果放到数组中。
 
+又发现自己一个傻逼地方。在test里面没写关闭的括号，导致把this.consume(")")去掉竟然过了。。
 
 

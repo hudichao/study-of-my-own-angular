@@ -234,11 +234,24 @@ AST.prototype.primary = function() {
         computed: false
       };
     } else if (next.text === '(') {
-      primary = {type: AST.CallExpression, callee: primary};
+      primary = {
+        type: AST.CallExpression, 
+        callee: primary,
+        arguments: this.parseArguments()
+      };
       this.consume(')');
     }
   }
   return primary;
+};
+AST.prototype.parseArguments = function() {
+  var args = [];
+  if (!this.peek(')')) {
+    do {
+      args.push(this.primary());
+    } while (this.expect(','));
+  }
+  return args;
 };
 AST.prototype.expect = function(e1, e2, e3, e4) {
   var token = this.peek(e1, e2, e3, e4);
@@ -313,9 +326,11 @@ ASTCompiler.prototype.compile = function(text) {
   this.recurse(ast);
 
   /* jshint -W054 */
-  return new Function('s', 'l',
+  var output = new Function('s', 'l',
     (this.state.vars.length ? 'var ' + this.state.vars.join(",") + ";" : "") + 
     this.state.body.join(""));
+  // console.log(output.toString());
+  return output;
   /* jshint +W054 */
 };
 ASTCompiler.prototype.nextId = function() {
@@ -372,7 +387,10 @@ ASTCompiler.prototype.recurse = function(ast) {
       return intoId;
     case AST.CallExpression: 
       var callee = this.recurse(ast.callee);
-      return callee + "&&" + callee + "()";
+      var args = _.map(ast.arguments, function(arg) {
+        return self.recurse(arg);
+      });
+      return callee + "&&" + callee + "(" + args.join(",") + ")";
   }
 };
 ASTCompiler.prototype.getHasOwnProperty = function(object, property) {
