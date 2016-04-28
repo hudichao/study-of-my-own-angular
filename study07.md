@@ -81,6 +81,7 @@ function(s) {
 
 local有值就用local。
 
+
 ### computed attribute
 
 ### function calls
@@ -93,5 +94,20 @@ function callss 由primary ast nodes处理，就和property access一样。在as
 在compile时候，recurse每个参数，并将结果放到数组中。
 
 又发现自己一个傻逼地方。在test里面没写关闭的括号，导致把this.consume(")")去掉竟然过了。。
+
+### method call
+
+已method方式被执行的function call。注意this。
+
+关于这个的所有的处理都在AST compiler下。
+关键：引入一个call context object。
+
+callContext包含属性：
++ context: 这个method所属的object，最终会是this
++ name: 这个method的property名字
++ computed: 这个方法是否是通过computed property获得
+
+其实返回的就是(v1)["aFunction"]()和(v1).aFunction()
+而不再是返回v0()(v0 = (v1)['aFunction'] 等
 
 

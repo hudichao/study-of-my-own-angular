@@ -232,6 +232,32 @@ describe("parse", function() {
       aFunction: function(a1, a2, a3) {return a1 + a2 + a3;}
     })).toBe(42);
   });
+
+  it("作为method被执行的函数", function() {
+    var scope = {
+      anObject: {
+        aMember: 42,
+        aFunction: function() {
+          return this.aMember;
+        }
+      }
+    };
+    var fn = parse('anObject["aFunction"]()');
+    expect(fn(scope)).toBe(42);
+  }); 
+
+  it(".属性", function() {
+    var scope = {
+      anObject: {
+        aMember: 42,
+        aFunction: function() {
+          return this.aMember;
+        }
+      }
+    };
+    var fn = parse('anObject.aFunction()');
+    expect(fn(scope)).toBe(42);
+  });
 });
 
 
