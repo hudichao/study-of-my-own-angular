@@ -180,6 +180,26 @@ describe("parse", function() {
     var locals = {aKey: {}};
     expect(fn(scope, locals)).toBeUndefined();
   });
+
+  it("parse 简单的computed property", function() {
+    var fn = parse('aKey["anotherKey"]');
+    expect(fn({aKey: {anotherKey: 42}}))
+  });
+
+  it("parse computed array", function() {
+    var fn = parse("anArray[1]");
+    expect(fn({anArray: [1, 2, 3]})).toBe(2);
+  });
+
+  it("parse computed property", function() {
+    var fn = parse('lock[key]');
+    expect(fn({key: 'theKey', lock: {theKey: 42}})).toBe(42);
+  });
+
+  it("parse computed property2", function() {
+    var fn = parse('lock[keys["aKey"]]');
+    expect(fn({keys: {aKey: 'theKey'}, lock: {theKey: 42}})).toBe(42);
+  });
 });
 
 

@@ -81,3 +81,7 @@ function(s) {
 
 local有值就用local。
 
+### computed attribute
+
+
+
