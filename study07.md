@@ -83,5 +83,12 @@ local有值就用local。
 
 ### computed attribute
 
+### function calls
+我们还要触发函数
+
+function callss 由primary ast nodes处理，就和property access一样。在ast.primary的while循环
+中，当看到(时，生成CallExpression node。并把之前的primary表达式设为callee(即要执行的function)
+
+
 
 
