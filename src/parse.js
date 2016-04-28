@@ -9,6 +9,7 @@ function parse(expr) {
   var parser = new Parser(lexer);
   return parser.parse(expr);
 }
+parse.enableLog = false;
 
 function Lexer() {
 
@@ -329,7 +330,9 @@ ASTCompiler.prototype.compile = function(text) {
   var output = new Function('s', 'l',
     (this.state.vars.length ? 'var ' + this.state.vars.join(",") + ";" : "") + 
     this.state.body.join(""));
-  // console.log(output.toString());
+  if (parse.enableLog) {
+    console.log(output.toString());
+  }
   return output;
   /* jshint +W054 */
 };
@@ -370,6 +373,11 @@ ASTCompiler.prototype.recurse = function(ast, context) {
       intoId = this.nextId();
       this.if_(this.getHasOwnProperty("l", ast.name), this.assign(intoId, this.nonComputedMember('l', ast.name)));
       this.if_(this.not(this.getHasOwnProperty("l", ast.name)) + ' && s', this.assign(intoId, this.nonComputedMember('s', ast.name)));
+      if (context) {
+        context.context = this.getHasOwnProperty("l", ast.name) + "?l:s";
+        context.name = ast.name;
+        context.computed = false;
+      }
       return intoId;
     case AST.ThisExpression:
       return 's';

@@ -111,3 +111,16 @@ callContext包含属性：
 而不再是返回v0()(v0 = (v1)['aFunction'] 等
 
 
+对于非method的普通函数调用。
+
+this指向scope
+
+生成Identifer expression的context
+这个context是l或者s, name是identifer name
+computed恒为false
+
+最后return (l && ('aFunction' in l) ? l: s).aFunction && (l && ('aFunction' in l) ? l: s).aFunction();
+这种
+
+
+

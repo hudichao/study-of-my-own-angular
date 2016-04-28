@@ -258,6 +258,28 @@ describe("parse", function() {
     var fn = parse('anObject.aFunction()');
     expect(fn(scope)).toBe(42);
   });
+
+  it("一般函数bind this to scope", function() {
+    var scope = {
+      aFunction: function() {
+        return this;
+      }
+    };
+    // parse.enableLog = true;
+    var fn = parse("aFunction()");
+    expect(fn(scope)).toBe(scope);
+  });
+
+  it("bind this to local", function() {
+    var scope = {};
+    var locals = {
+      aFunction: function() {
+        return this;
+      }
+    };
+    var fn = parse("aFunction()");
+    expect(fn(scope, locals)).toBe(locals);
+  });
 });
 
 
