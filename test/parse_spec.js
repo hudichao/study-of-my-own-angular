@@ -316,6 +316,13 @@ describe("parse", function() {
     expect(scope.anArray[0].anAttribute).toBe(42);
   });
 
+  it("属性不存在时自动生成属性", function() {
+    parse.enableLog = true;
+    var fn = parse('some["nested"].property.path = 42');
+    var scope = {};
+    fn(scope);
+    expect(scope.some.nested.property.path).toBe(42);
+  });
 });
 
 

@@ -127,5 +127,7 @@ assignment不属于AST.primary，
 
 assignment可以替代现在的primary，如果没等号，效果和原primary一样。
 
+### 自己生成属性
+又是自己test写错了。nest没加引号
 
 
