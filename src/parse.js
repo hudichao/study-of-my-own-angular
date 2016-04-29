@@ -9,7 +9,8 @@ var APPLY = Function.prototype.apply;
 var BIND = Function.prototype.bind;
 var OPERATORS = {
   "+": true,
-  '!': true
+  '!': true,
+  '-': true
 };
 //helper function
 function ensureSafeMemberName(name) {
@@ -259,7 +260,7 @@ AST.prototype.assignment = function() {
   return left;
 };
 AST.prototype.unary = function() {
-  var token = this.expect('+', '!');
+  var token = this.expect('+', '!', '-');
   if (token) {
     return {
       type: AST.UnaryExpression,
@@ -269,7 +270,7 @@ AST.prototype.unary = function() {
   } else {
     return this.primary();
   }
-}
+};
 AST.prototype.primary = function() {
   var primary;
   if (this.expect('[')) {

@@ -15,3 +15,5 @@ ifDefined方法生成一个runtime JS call来执行ifDefined
 
 parse !
 
+parse -: 负数
+

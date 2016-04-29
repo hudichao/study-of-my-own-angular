@@ -373,13 +373,13 @@ describe("parse", function() {
 
   it("不允许以non-computed property来access window", function() {
     var fn = parse('anObject.wnd');
-    expect(function() {fn({anObject: {wnd: window}})}).toThrow();
+    expect(function() {fn({anObject: {wnd: window}});}).toThrow();
   });
 
   it("不允许传入window", function() {
     var fn = parse('aFunction(wnd)');
     expect(function() {
-      fn({aFunction: function() {}, wnd: window})
+      fn({aFunction: function() {}, wnd: window});
     }).toThrow();
   });
 
@@ -460,6 +460,13 @@ describe("parse", function() {
     expect(parse('!42')()).toBe(false);
     expect(parse('!a')({a: false})).toBe(true);
     expect(parse('!!a')({a: false})).toBe(false);
+  });
+
+  it('parse a unary -', function() {
+    expect(parse('-42')()).toBe(-42);
+    expect(parse('-a')({a: -42})).toBe(42);
+    expect(parse('--a')({a: -42})).toBe(-42);
+    expect(parse('-a')({})).toBe(0);
   });
 });
 
