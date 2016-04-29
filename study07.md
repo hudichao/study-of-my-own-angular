@@ -152,4 +152,6 @@ __defineGetter__,__lookupGetter__,__defineSetter__,__lookupSetter。[非标准�
 
 不能访问window
 
+不能传window
+
 

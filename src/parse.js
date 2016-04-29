@@ -456,7 +456,7 @@ ASTCompiler.prototype.recurse = function(ast, context, create) {
       var callContext = {};
       var callee = this.recurse(ast.callee, callContext);
       var args = _.map(ast.arguments, function(arg) {
-        return self.recurse(arg);
+        return 'ensureSafeObject(' + self.recurse(arg) + ')';
       });
       if (callContext.name) {
         if (callContext.computed) {

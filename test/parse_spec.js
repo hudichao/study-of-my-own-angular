@@ -375,6 +375,13 @@ describe("parse", function() {
     var fn = parse('anObject.wnd');
     expect(function() {fn({anObject: {wnd: window}})}).toThrow();
   });
+
+  it("不允许传入window", function() {
+    var fn = parse('aFunction(wnd)');
+    expect(function() {
+      fn({aFunction: function() {}, wnd: window})
+    }).toThrow();
+  });
 });
 
 
