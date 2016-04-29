@@ -365,6 +365,16 @@ describe("parse", function() {
       fn({obj: {}});
     }).toThrow();
   });
+
+  it("不允许以computed property来access window", function() {
+    var fn = parse('anObject["wnd"]');
+    expect(function() {fn({anObject: {wnd: window}})}).toThrow();
+  });
+
+  it("不允许以non-computed property来access window", function() {
+    var fn = parse('anObject.wnd');
+    expect(function() {fn({anObject: {wnd: window}})}).toThrow();
+  });
 });
 
 

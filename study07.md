@@ -148,5 +148,8 @@ __defineGetter__,__lookupGetter__,__defineSetter__,__lookupSetter。[非标准�
 
 感觉不是很懂。。。pass 先。
 
+### 安全object
+
+不能访问window
 
 

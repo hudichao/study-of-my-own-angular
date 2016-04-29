@@ -13,7 +13,14 @@ function ensureSafeMemberName(name) {
   throw  "Attempting to access a disallowed field in Angular expressions!";
   }
 }
-
+function ensureSafeObject(obj) {
+  if (obj) {
+    if (obj.window === obj) {
+      throw "Referencing window in Angular expressions is disallowed!";
+    }
+  }
+  return obj;
+}
 function parse(expr) {
   var lexer = new Lexer();
   var parser = new Parser(lexer);
@@ -348,7 +355,12 @@ ASTCompiler.prototype.compile = function(text) {
     (this.state.vars.length ? 'var ' + this.state.vars.join(",") + ";" : "") + 
     this.state.body.join("") + "}; return fn;";
   /* jshint -W054 */
-  var output = new Function("ensureSafeMemberName", fnString)(ensureSafeMemberName);
+  var output = new Function(
+    "ensureSafeMemberName",
+    'ensureSafeObject', 
+    fnString)(
+      ensureSafeMemberName,
+      ensureSafeObject);
   /* jshint +W054 */
   if (parse.enableLog) {
     console.log(output.toString());
@@ -420,7 +432,7 @@ ASTCompiler.prototype.recurse = function(ast, context, create) {
             this.assign(this.computedMember(left, right), '{}'));
         }
         this.if_(left,
-          this.assign(intoId, this.computedMember(left, right)));
+          this.assign(intoId, 'ensureSafeObject(' + this.computedMember(left, right) + ')'));
         if (context) {
           context.name = right;
           context.computed = true;
@@ -432,7 +444,8 @@ ASTCompiler.prototype.recurse = function(ast, context, create) {
             this.assign(this.nonComputedMember(left, ast.property.name), '{}'));
         }
         this.if_(left,
-          this.assign(intoId, this.nonComputedMember(left, ast.property.name)));
+          this.assign(intoId, 
+            'ensureSafeObject(' + this.nonComputedMember(left, ast.property.name) + ')'));
         if (context) {
           context.name = ast.property.name;
           context.computed = false;
@@ -467,7 +480,7 @@ ASTCompiler.prototype.recurse = function(ast, context, create) {
 };
 ASTCompiler.prototype.addEnsureSafeMemberName = function(expr) {
   this.state.body.push('ensureSafeMemberName(' + expr + ');');
-}
+};
 ASTCompiler.prototype.getHasOwnProperty = function(object, property) {
   return object + '&&(' + this.escape(property) + ' in ' + object + ')';
 };
