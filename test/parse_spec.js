@@ -445,6 +445,15 @@ describe("parse", function() {
   });
 
 
+  // operator
+  it("parse 一个unary +", function() {
+    expect(parse('+42')()).toBe(42);
+    expect(parse('+a')({a: 42})).toBe(42);
+  });
+
+  it("+undfeind 返回0，而不是NaN", function() {
+    expect(parse('+a')({})).toBe(0);
+  });
 });
 
 

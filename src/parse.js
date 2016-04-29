@@ -7,6 +7,9 @@ var ESCAPES =  {'n': '\n', 'f': '\f', 'r': '\r', 't': '\t', 'v': '\v', '\'': '\'
 var CALL = Function.prototype.call;
 var APPLY = Function.prototype.apply;
 var BIND = Function.prototype.bind;
+var OPERATORS = {
+  "+": true
+};
 //helper function
 function ensureSafeMemberName(name) {
   if (name ===  "constructor"  || name ===  "__proto__"  ||
@@ -38,6 +41,9 @@ function ensureSafeFunction(obj) {
     }
   }
   return obj;
+}
+function ifDefined(value, defaultValue) {
+  return typeof value === 'undefined' ? defaultValue : value;
 }
 function parse(expr) {
   var lexer = new Lexer();
@@ -80,7 +86,13 @@ Lexer.prototype.lex = function(text) {
       this.index++;
     }
     else {
-      throw "unexpected next character: " + this.ch;
+      var op = OPERATORS[this.ch];
+      if (op) {
+        this.tokens.push({text:this.ch});
+        this.index++;
+      } else {
+        throw "unexpected next character: " + this.ch;
+      }
     }
   }
 
@@ -235,15 +247,27 @@ AST.ThisExpression = 'ThisExpression';
 AST.MemberExpression = 'MemberExpression';
 AST.CallExpression = "CallExpression";
 AST.AssignmentExpression = "AssignmentExpression";
+AST.UnaryExpression = "UnaryExpression";
 
 AST.prototype.assignment = function() {
-  var left = this.primary();
+  var left = this.unary();
   if (this.expect("=")) {
-    var right = this.primary();
+    var right = this.unary();
     return {type: AST.AssignmentExpression, left: left, right: right};
   }
   return left;
 };
+AST.prototype.unary = function() {
+  if (this.expect('+')) {
+    return {
+      type: AST.UnaryExpression,
+      operator: '+',
+      argument: this.primary()
+    };
+  } else {
+    return this.primary();
+  }
+}
 AST.prototype.primary = function() {
   var primary;
   if (this.expect('[')) {
@@ -377,10 +401,12 @@ ASTCompiler.prototype.compile = function(text) {
     "ensureSafeMemberName",
     'ensureSafeObject', 
     'ensureSafeFunction', 
+    'ifDefined',
     fnString)(
       ensureSafeMemberName,
       ensureSafeObject,
-      ensureSafeFunction);
+      ensureSafeFunction,
+      ifDefined);
   /* jshint +W054 */
   if (parse.enableLog) {
     console.log(output.toString());
@@ -499,8 +525,13 @@ ASTCompiler.prototype.recurse = function(ast, context, create) {
         leftExpr = this.nonComputedMember(leftContext.context, leftContext.name);
       }
       return this.assign(leftExpr, 'ensureSafeObject(' + this.recurse(ast.right) + ')');
+    case AST.UnaryExpression: 
+      return ast.operator + "(" + this.ifDefined(this.recurse(ast.argument), 0) + ")";
   }
 };
+ASTCompiler.prototype.ifDefined = function(value, defaultValue) {
+  return 'ifDefined(' + value + ',' + this.escape(defaultValue) + ')';
+}
 ASTCompiler.prototype.addEnsureSafeFunction = function(expr) {
   this.state.body.push("ensureSafeFunction(" + expr + ');');
 };
