@@ -4,6 +4,16 @@ var _ = require("lodash");
 
 
 var ESCAPES =  {'n': '\n', 'f': '\f', 'r': '\r', 't': '\t', 'v': '\v', '\'': '\'', '"': '"'};
+
+//helper function
+function ensureSafeMemberName(name) {
+  if (name ===  "constructor"  || name ===  "__proto__"  ||
+      name ===  "__defineGetter__"  || name ===  "__defineSetter__"  ||
+      name ===  "__lookupGetter__"  || name ===  "__lookupSetter__" ) {
+  throw  "Attempting to access a disallowed field in Angular expressions!";
+  }
+};
+
 function parse(expr) {
   var lexer = new Lexer();
   var parser = new Parser(lexer);
@@ -379,6 +389,7 @@ ASTCompiler.prototype.recurse = function(ast, context, create) {
       });
       return '{' + properties.join(",") + '}';
     case AST.Identifier:
+      ensureSafeMemberName(ast.name);
       intoId = this.nextId();
       this.if_(this.getHasOwnProperty("l", ast.name), this.assign(intoId, this.nonComputedMember('l', ast.name)));
       if (create) {
@@ -414,6 +425,7 @@ ASTCompiler.prototype.recurse = function(ast, context, create) {
           context.computed = true;
         }
       } else {
+        ensureSafeMemberName(ast.property.name);
         if (create) {
           this.if_(this.not(this.nonComputedMember(left, ast.property.name)), 
             this.assign(this.nonComputedMember(left, ast.property.name), '{}'));
