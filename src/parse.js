@@ -69,7 +69,7 @@ Lexer.prototype.isNumber = function(ch) {
 Lexer.prototype.isIdent = function(ch) {
   var a = (ch >= "a" && ch <="z");
   var b = (ch >= "A" && ch <= "Z");
-  var c = (ch === "_" && ch === "$");
+  var c = (ch === "_" || ch === "$");
   return a || b || c;
 };
 Lexer.prototype.isWhitespace = function(ch) {

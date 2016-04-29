@@ -130,4 +130,13 @@ assignment可以替代现在的primary，如果没等号，效果和原primary�
 ### 自己生成属性
 又是自己test写错了。nest没加引号
 
+### 更安全的member access
+如果什么都不做
+aFunction.constructor("return window;")()
+能返回window，无论你实际aFunction写的是什么。因为我们用了new Function
+除了constructor，以下的这些也有不可预知的问题
+__proto__ [非标准的获取和设置全局prototype]("https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/proto")
+__defineGetter__,__lookupGetter__,__defineSetter__,__lookupSetter。[非标准的定义object的property]("https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/__defineGetter__")
+
+改正了一个bug。这个bug导致所有带_或$的都不被认为是identifier
 

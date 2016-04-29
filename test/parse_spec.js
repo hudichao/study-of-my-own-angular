@@ -317,11 +317,52 @@ describe("parse", function() {
   });
 
   it("属性不存在时自动生成属性", function() {
-    parse.enableLog = true;
     var fn = parse('some["nested"].property.path = 42');
     var scope = {};
     fn(scope);
     expect(scope.some.nested.property.path).toBe(42);
+  });
+
+  it("不允许function constructor", function() {
+    // parse.enableLog = true;
+    // var fn = parse('aFunction.constructor("return 43;")()');
+    // var scope = {aFunction: function() {return 42}};
+    // expect(fn(scope)).toBe(42);
+    expect(function() {
+      var fn = parse('aFunction.constructor("return window;")()');
+      fn({aFunction: function() {}});
+    }).toThrow();
+  });
+
+  it("不允许访问__proto__", function() {
+    expect(function() {
+      var fn = parse('obj.__proto__');
+      fn({obj: {}});
+    }).toThrow();
+  });
+  it("不允许执行__defineGetter__", function() {
+    expect(function() {
+      var fn = parse('obj.__defineGetter__("evil", fn)');
+      fn({obj: {}, fn: function() {}});
+    }).toThrow();
+  });
+  it("不允许执行__defineSetter__", function() {
+    expect(function() {
+      var fn = parse('obj.__defineSetter__("evil", fn)');
+      fn({obj: {}, fn: function() {}});
+    }).toThrow();
+  });
+  it("不允许执行__lookupGetter__", function() {
+    expect(function() {
+      var fn = parse('obj.__lookupGetter__("evil")');
+      fn({obj: {}});
+    }).toThrow();
+  });
+  it("不允许执行__lookupSetter__", function() {
+    expect(function() {
+      var fn = parse('obj.__lookupSetter__("evil")');
+      fn({obj: {}});
+    }).toThrow();
   });
 });
 
