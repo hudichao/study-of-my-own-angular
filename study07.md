@@ -159,3 +159,17 @@ __defineGetter__,__lookupGetter__,__defineSetter__,__lookupSetter。[非标准�
 还有不能调用function constructor。很简单，因为这个constructor也有一个constructor（指向自己）。
 
 Object的一些方法如：Object.defineProperty(), Object.freeze(), Object.getOwnPropertyDescriptor()和 Object.setPrototypeOf()，比较危险。所以也禁止。
+
+### 安全function
+
+不能rebind this
+
+总结：
+computed and non-computed attribute lookup
+scope attribute被locals复写
+angular expression调用函数
+获取method call的this
+etc。
+
+下一章学习operator。
+

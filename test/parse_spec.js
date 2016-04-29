@@ -429,6 +429,22 @@ describe("parse", function() {
       fn({obj: Object});
     }).toThrow();
   });
+
+  it("不能调用call", function() {
+    var fn = parse("fn.call(obj)");
+    expect(function() {
+      fn({fun: function() {}, obj: {}});
+    }).toThrow();
+  });
+
+  it("不能调用apply", function() {
+    var fn = parse("fn.apply(obj)");
+    expect(function() {
+      fn({fun: function() {}, obj: {}});
+    }).toThrow();
+  });
+
+
 });
 
 
