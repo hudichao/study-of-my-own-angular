@@ -122,5 +122,10 @@ computed恒为false
 最后return (l && ('aFunction' in l) ? l: s).aFunction && (l && ('aFunction' in l) ? l: s).aFunction();
 这种
 
+### 数据赋值
+assignment不属于AST.primary，
+
+assignment可以替代现在的primary，如果没等号，效果和原primary一样。
+
 
 
