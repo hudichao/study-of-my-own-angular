@@ -317,6 +317,7 @@ describe("parse", function() {
   });
 
   it("属性不存在时自动生成属性", function() {
+    parse.enableLog = true;
     var fn = parse('some["nested"].property.path = 42');
     var scope = {};
     fn(scope);

@@ -138,11 +138,15 @@ aFunction.constructor("return window;")()
 __proto__ [非标准的获取和设置全局prototype]("https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/proto")
 __defineGetter__,__lookupGetter__,__defineSetter__,__lookupSetter。[非标准的定义object的property]("https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/__defineGetter__")
 
+> 改正了一个bug。这个bug导致所有带_或$的都不被认为是identifier
+
 对于non-computed member，因为我们在parse的时候不知道property的名字，所以需要在runtime，当每次表达式执行时调用ensureSafeMemberName函数。
 
+因为我们需要在runtime使用ensureSafeMemberName, 我们需要让我们生成的的函数不像以前是expression function而是返回expression function的function
+
+关键是这句 new Function("ensureSafeMemberName", fnString)(ensureSafeMemberName);
+
+感觉不是很懂。。。pass 先。
 
 
-
-
-改正了一个bug。这个bug导致所有带_或$的都不被认为是identifier
 
