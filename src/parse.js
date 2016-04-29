@@ -8,7 +8,8 @@ var CALL = Function.prototype.call;
 var APPLY = Function.prototype.apply;
 var BIND = Function.prototype.bind;
 var OPERATORS = {
-  "+": true
+  "+": true,
+  '!': true
 };
 //helper function
 function ensureSafeMemberName(name) {
@@ -258,11 +259,12 @@ AST.prototype.assignment = function() {
   return left;
 };
 AST.prototype.unary = function() {
-  if (this.expect('+')) {
+  var token = this.expect('+', '!');
+  if (token) {
     return {
       type: AST.UnaryExpression,
-      operator: '+',
-      argument: this.primary()
+      operator: token.text,
+      argument: this.unary()
     };
   } else {
     return this.primary();

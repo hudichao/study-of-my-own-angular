@@ -12,3 +12,6 @@ filter
 unary会生成UnaryExpression token。
 
 ifDefined方法生成一个runtime JS call来执行ifDefined
+
+parse !
+

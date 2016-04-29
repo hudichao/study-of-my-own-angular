@@ -454,6 +454,13 @@ describe("parse", function() {
   it("+undfeind 返回0，而不是NaN", function() {
     expect(parse('+a')({})).toBe(0);
   });
+
+  it("parse a unary !", function() {
+    expect(parse('!true')()).toBe(false);
+    expect(parse('!42')()).toBe(false);
+    expect(parse('!a')({a: false})).toBe(true);
+    expect(parse('!!a')({a: false})).toBe(false);
+  });
 });
 
 
