@@ -154,4 +154,8 @@ __defineGetter__,__lookupGetter__,__defineSetter__,__lookupSetter。[非标准�
 
 不能传window
 
+不仅是window，dom也不行。
 
+还有不能调用function constructor。很简单，因为这个constructor也有一个constructor（指向自己）。
+
+Object的一些方法如：Object.defineProperty(), Object.freeze(), Object.getOwnPropertyDescriptor()和 Object.setPrototypeOf()，比较危险。所以也禁止。

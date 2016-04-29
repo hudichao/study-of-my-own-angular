@@ -382,6 +382,53 @@ describe("parse", function() {
       fn({aFunction: function() {}, wnd: window})
     }).toThrow();
   });
+
+  it("不能在window上call method", function() {
+    var fn = parse('wnd.scrollTo(0)');
+    expect(function() {
+      fn({wnd: window});
+    }).toThrow();
+  });
+
+  it("不能call返回window的function", function() {
+    var fn = parse("getWnd()");
+    expect(function() {fn({getWnd: _.constant(window)});}).toThrow();
+  });
+
+  it("不允许赋值window", function() {
+    var fn = parse('wnd = anObject');
+    expect(function() {
+      fn({anObject: window});
+    }).toThrow();
+  });
+
+  it("不能参照window", function() {
+    var fn = parse('wnd');
+    expect(function() {
+      fn({wnd: window});
+    }).toThrow();
+  });
+
+  it("不能从DOM元素上调用函数", function() {
+    var fn = parse('el.setAttribute("evil", "true")');
+    expect(function() {
+      fn({el: document.documentElement});
+    }).toThrow();
+  });
+
+  it("不能调用function constructor", function() {
+    var fn = parse('fnConstructor("return window;")');
+    expect(function() {
+      fn({fnConstructor: (function() {}).constructor});
+    }).toThrow();
+  });
+
+  it("不允许在object上调用函数", function() {
+    var fn = parse('obj.create({})');
+    expect(function() {
+      fn({obj: Object});
+    }).toThrow();
+  });
 });
 
 
