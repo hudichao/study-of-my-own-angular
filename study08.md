@@ -104,3 +104,6 @@ d = a || b
 9. Ternary expressions: a ? b : c.
 10. Assignments: a = b.
 
+### 括号改变优先级
+实现方法：改primary
+
