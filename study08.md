@@ -35,6 +35,7 @@ AST新的方法 multiplicative
 
 ### 加减
 
+加减法对于undefined，设为0
 
 
 

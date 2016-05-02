@@ -501,6 +501,16 @@ describe("parse", function() {
     expect(parse('2 + 3 * 5')()).toBe(17);
     expect(parse('2 + 3 * 2 + 3')()).toBe(11);
   });
+
+  it("加法中代替undefined为0", function() {
+    expect(parse('a + 22')()).toBe(22);
+    expect(parse('22 + a')()).toBe(22);
+  });
+
+  it("减法中代替undefined为0", function() {
+    expect(parse('a - 22')()).toBe(-22);
+    expect(parse('22 - a')()).toBe(22);
+  });
 });
 
 
