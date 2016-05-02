@@ -89,7 +89,7 @@ Lexer.prototype.lex = function(text) {
     else if (this.is('\'"')) {
       this.readString(this.ch);
     }
-    else if (this.is('[],{}:.()')) {
+    else if (this.is('[],{}:.()?')) {
       this.tokens.push({
         text: this.ch
       });
@@ -284,6 +284,7 @@ AST.AssignmentExpression = "AssignmentExpression";
 AST.UnaryExpression = "UnaryExpression";
 AST.BinaryExpression = 'BinaryExpression';
 AST.LogicalExpression = "LogicalExpression";
+AST.ConditionalExpression = "ConditionalExpression";
 
 AST.prototype.assignment = function() {
   // 永远选择当前优先度最小的操作
@@ -292,14 +293,16 @@ AST.prototype.assignment = function() {
   // var left = this.multiplicative();
   // var left = this.additive();
   // var left = this.equality();
-  var left = this.logicalOR();
+  // var left = this.logicalOR();
+  var left = this.ternary();
 
   if (this.expect("=")) {
     // var right = this.unary();
     // var right = this.multiplicative();
     // var right = this.additive();
     // var right = this.equality();
-    var right = this.logicalOR();
+    // var right = this.logicalOR();
+    var right = this.ternary();
     return {type: AST.AssignmentExpression, left: left, right: right};
   }
   return left;
@@ -393,6 +396,22 @@ AST.prototype.logicalAND = function() {
     };
   }
   return left;
+};
+AST.prototype.ternary = function() {
+  var test = this.logicalOR();
+  if (this.expect('?')) {
+    var consequent = this.assignment();
+    if (this.consume(':')) {
+      var alternate = this.assignment();
+      return {
+        type: AST.ConditionalExpression,
+        test: test,
+        consequent: consequent,
+        alternate: alternate
+      };
+    }
+  }
+  return test;
 };
 AST.prototype.primary = function() {
   var primary;
@@ -669,6 +688,14 @@ ASTCompiler.prototype.recurse = function(ast, context, create) {
       this.state.body.push(this.assign(intoId, this.recurse(ast.left)));
       this.if_(ast.operator === "&&" ? intoId: this.not(intoId), 
         this.assign(intoId, this.recurse(ast.right)));
+      return intoId;
+    case AST.ConditionalExpression:
+      intoId = this.nextId();
+      var testId = this.nextId();
+      this.state.body.push(this.assign(testId, this.recurse(ast.test)));
+
+      this.if_(testId, this.assign(intoId, this.recurse(ast.consequent)));
+      this.if_(this.not(testId), this.assign(intoId, this.recurse(ast.alternate)));
       return intoId;
   }
 };

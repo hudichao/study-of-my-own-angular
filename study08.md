@@ -86,7 +86,21 @@ d = a || b
 如果!a是true d = b return d
 如果!a是false return d
 
+### 三元operator
+本章最后一个operator。
+三元优先级比or低。
 
+和本章之前不同，我们不在operator函数中实现。因为有两个operator ？和 :
+所以在AST building中检测更方便。
 
-
+看AST builder方法被执行的顺序的倒序即为operator的顺序
+1. Primary expressions: Lookups, function calls, method calls.
+2. Unary expressions: +a, -a, !a.
+3. Multiplicative arithmetic expressions: a * b, a / b, and a % b.
+4. Additive arithmetic expressions: a + b and a - b.
+5. Relationalexpressions:a<b,a>b,a<=b,anda>=b.
+6. Equality testing expressions: a == b, a != b, a === b, and a !== b. 7. Logical AND expressions: a && b.
+8. Logical OR expressions: a || b.
+9. Ternary expressions: a ? b : c.
+10. Assignments: a = b.
 
