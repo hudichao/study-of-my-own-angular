@@ -17,3 +17,14 @@ parse !
 
 parse -: 负数
 
+解决字符串中的感叹号的bug
+
+由于string token有一个text 属性，有一个值为!, 所以AST builder把它解释为unary ! operator。
+
+解决方法：
+
+包含前后引号
+
+
+
+

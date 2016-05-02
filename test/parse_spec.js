@@ -468,6 +468,10 @@ describe("parse", function() {
     expect(parse('--a')({a: -42})).toBe(-42);
     expect(parse('-a')({})).toBe(0);
   });
+
+  it("parse string 中的 !", function() {
+    expect(parse('"!"')()).toBe('!');
+  });
 });
 
 

@@ -149,10 +149,12 @@ Lexer.prototype.readIdent = function() {
 Lexer.prototype.readString = function(quote) {
   this.index++; // 忽略开头的引号
   var string = '';
+  //rawString 包含两边引号
+  var rawString = quote;
   var escape = false;
   while (this.index < this.text.length) {
     var ch = this.text.charAt(this.index);
-
+    rawString += ch;
     if (escape) {
       if (ch === 'u') {
         var hex = this.text.substring(this.index + 1, this.index + 5);
@@ -176,7 +178,7 @@ Lexer.prototype.readString = function(quote) {
     else if (ch === quote) {
       this.index++;
       this.tokens.push({
-        text: string,
+        text: rawString,
         value: string
       });
       return;
@@ -534,7 +536,7 @@ ASTCompiler.prototype.recurse = function(ast, context, create) {
 };
 ASTCompiler.prototype.ifDefined = function(value, defaultValue) {
   return 'ifDefined(' + value + ',' + this.escape(defaultValue) + ')';
-}
+};
 ASTCompiler.prototype.addEnsureSafeFunction = function(expr) {
   this.state.body.push("ensureSafeFunction(" + expr + ');');
 };
