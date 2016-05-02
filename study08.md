@@ -107,3 +107,6 @@ d = a || b
 ### 括号改变优先级
 实现方法：改primary
 
+### 多个statement
+
+
