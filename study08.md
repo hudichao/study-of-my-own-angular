@@ -69,3 +69,24 @@ true
 
 目前lexer看到第一个=时，就不看后面的了。(为了上一章的赋值)得改。
 
+### and or
+有意思的地方是和js一样，如果前面已经是false后面的表达式不会求值。or类似。
+
+and优先级比or高。
+
+实现方法：都是套路。新建一个LogicalExpression虽然实际它是BinaryExpression
+
+c = a && b
+第一步 c = a
+如果a是true c = b return c
+如果a是false return c
+
+d = a || b
+第一步 d = a 
+如果!a是true d = b return d
+如果!a是false return d
+
+
+
+
+

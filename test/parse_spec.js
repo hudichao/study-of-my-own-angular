@@ -537,6 +537,53 @@ describe("parse", function() {
   it("比加法低", function() {
     expect(parse('2 + 3 < 6 - 2')()).toBe(false);
   });
+
+  it("parse and", function() {
+    expect(parse('true && true')()).toBe(true);
+    expect(parse('true && false')()).toBe(false);
+  });
+
+  it("parse or", function() {
+    expect(parse('true || true')()).toBe(true);
+    expect(parse('true || false')()).toBe(true);
+    expect(parse('false || false')()).toBe(false);
+  });
+
+  it("parse 多个 and", function() {
+    expect(parse('true && true && true')()).toBe(true);
+    expect(parse('true && true && false')()).toBe(false);
+  });
+
+  it("parse 多个 or", function() {
+    expect(parse('true || true || true')()).toBe(true);
+    expect(parse('true || true || false')()).toBe(true);
+    expect(parse('false || true  || false')()).toBe(true);
+    expect(parse('false || false || false')()).toBe(false);
+  });
+
+  it("short-circuit and", function() {
+    var invoked;
+    var scope = {fn: function() {invoked = true;}};
+    parse('false && fn()')(scope);
+
+    expect(invoked).toBeUndefined();
+  });
+
+  it("short-circuit or", function() {
+    var invoked;
+    var scope = {fn: function() {invoked = true;}};
+    parse('true || fn()')(scope);
+
+    expect(invoked).toBeUndefined();
+  });
+
+  it("and 优先度高于or", function() {
+    expect(parse('false && true || true')()).toBe(true);
+  });
+
+  it("or 优先度低于and", function() {
+    expect(parse('1 === 2 || 2 === 2')()).toBeTruthy();
+  });
 });
 
 

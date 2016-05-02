@@ -22,7 +22,9 @@ var OPERATORS = {
   '<': true,
   '>': true,
   '<=': true,
-  '>=': true
+  '>=': true,
+  '&&': true,
+  '||': true
 };
 //helper function
 function ensureSafeMemberName(name) {
@@ -281,6 +283,7 @@ AST.CallExpression = "CallExpression";
 AST.AssignmentExpression = "AssignmentExpression";
 AST.UnaryExpression = "UnaryExpression";
 AST.BinaryExpression = 'BinaryExpression';
+AST.LogicalExpression = "LogicalExpression";
 
 AST.prototype.assignment = function() {
   // 永远选择当前优先度最小的操作
@@ -288,13 +291,15 @@ AST.prototype.assignment = function() {
   // var left = this.unary();
   // var left = this.multiplicative();
   // var left = this.additive();
-  var left = this.equality();
+  // var left = this.equality();
+  var left = this.logicalOR();
 
   if (this.expect("=")) {
     // var right = this.unary();
     // var right = this.multiplicative();
     // var right = this.additive();
-    var right = this.equality();
+    // var right = this.equality();
+    var right = this.logicalOR();
     return {type: AST.AssignmentExpression, left: left, right: right};
   }
   return left;
@@ -359,6 +364,32 @@ AST.prototype.relational = function() {
       left: left,
       operator: token.text,
       right: this.additive()
+    };
+  }
+  return left;
+};
+AST.prototype.logicalOR = function() {
+  var left = this.logicalAND();
+  var token;
+  while ((token = this.expect('||'))) {
+    left = {
+      type: AST.LogicalExpression,
+      left: left,
+      operator: token.text,
+      right: this.logicalAND()
+    };
+  }
+  return left;
+};
+AST.prototype.logicalAND = function() {
+  var left = this.equality();
+  var token;
+  while ((token = this.expect('&&'))) {
+    left = {
+      type: AST.LogicalExpression,
+      left: left,
+      operator: token.text,
+      right: this.equality()
     };
   }
   return left;
@@ -633,6 +664,12 @@ ASTCompiler.prototype.recurse = function(ast, context, create) {
           '(' + this.recurse(ast.right) + ')';
       }
       break;
+    case AST.LogicalExpression:
+      intoId = this.nextId();
+      this.state.body.push(this.assign(intoId, this.recurse(ast.left)));
+      this.if_(ast.operator === "&&" ? intoId: this.not(intoId), 
+        this.assign(intoId, this.recurse(ast.right)));
+      return intoId;
   }
 };
 ASTCompiler.prototype.ifDefined = function(value, defaultValue) {
