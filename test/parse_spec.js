@@ -484,6 +484,10 @@ describe("parse", function() {
   it("parse余数", function() {
     expect(parse('85 % 43')()).toBe(42);
   });
+
+  it("parse多个乘除", function() {
+    expect(parse('36 * 2 % 5')()).toBe(2);
+  });
 });
 
 

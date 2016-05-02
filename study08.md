@@ -27,7 +27,12 @@ parse -: 负数
 
 ### 乘除
 
-ASY新的方法 multiplicative
+AST新的方法 multiplicative
+
+顺序
+
+不断笑话multiplicative中的token，直到没有operator。因为所有multiplicative拥有相同的优先级，所以从左到右执行。
+
 
 
 
