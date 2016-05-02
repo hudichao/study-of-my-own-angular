@@ -368,7 +368,7 @@ describe("parse", function() {
 
   it("不允许以computed property来access window", function() {
     var fn = parse('anObject["wnd"]');
-    expect(function() {fn({anObject: {wnd: window}})}).toThrow();
+    expect(function() {fn({anObject: {wnd: window}});}).toThrow();
   });
 
   it("不允许以non-computed property来access window", function() {
@@ -487,6 +487,19 @@ describe("parse", function() {
 
   it("parse多个乘除", function() {
     expect(parse('36 * 2 % 5')()).toBe(2);
+  });
+
+  it("parse加法", function() {
+    expect(parse('20 + 22')()).toBe(42);
+  });
+
+  it("prase减法", function() {
+    expect(parse('42 - 20')()).toBe(22);
+  });
+
+  it("加减乘除的顺序", function() {
+    expect(parse('2 + 3 * 5')()).toBe(17);
+    expect(parse('2 + 3 * 2 + 3')()).toBe(11);
   });
 });
 

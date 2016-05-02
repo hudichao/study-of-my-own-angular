@@ -33,6 +33,9 @@ AST新的方法 multiplicative
 
 不断笑话multiplicative中的token，直到没有operator。因为所有multiplicative拥有相同的优先级，所以从左到右执行。
 
+### 加减
+
+
 
 
 

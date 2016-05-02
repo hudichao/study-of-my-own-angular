@@ -259,10 +259,12 @@ AST.BinaryExpression = 'BinaryExpression';
 
 AST.prototype.assignment = function() {
   // var left = this.unary();
-  var left = this.multiplicative();
+  // var left = this.multiplicative();
+  var left = this.additive();
   if (this.expect("=")) {
     // var right = this.unary();
-    var right = this.multiplicative();
+    // var right = this.multiplicative();
+    var right = this.additive();
     return {type: AST.AssignmentExpression, left: left, right: right};
   }
   return left;
@@ -288,6 +290,19 @@ AST.prototype.multiplicative = function() {
       left: left,
       operator: token.text,
       right: this.unary()
+    };
+  }
+  return left;
+};
+AST.prototype.additive = function() {
+  var left = this.multiplicative();
+  var token;
+  while ((token = this.expect('+')) || (token = this.expect('-'))) {
+    left = {
+      type: AST.BinaryExpression,
+      left: left,
+      operator: token.text,
+      right: this.multiplicative()
     };
   }
   return left;
