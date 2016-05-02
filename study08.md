@@ -109,4 +109,7 @@ d = a || b
 
 ### 多个statement
 
+### 本章结束
+
+下一章filter。filter是唯一主要的angular有，js没有的东西。
 
