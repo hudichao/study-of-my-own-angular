@@ -25,6 +25,10 @@ parse -: 负数
 
 包含前后引号
 
+### 乘除
+
+ASY新的方法 multiplicative
+
 
 
 

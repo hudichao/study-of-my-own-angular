@@ -472,6 +472,18 @@ describe("parse", function() {
   it("parse string 中的 !", function() {
     expect(parse('"!"')()).toBe('!');
   });
+
+  it("parse乘法", function() {
+    expect(parse('21 * 2')()).toBe(42);
+  });
+
+  it("parse除法", function() {
+    expect(parse('84 / 2')()).toBe(42);
+  });
+
+  it("parse余数", function() {
+    expect(parse('85 % 43')()).toBe(42);
+  });
 });
 
 
