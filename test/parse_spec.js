@@ -511,6 +511,32 @@ describe("parse", function() {
     expect(parse('a - 22')()).toBe(-22);
     expect(parse('22 - a')()).toBe(22);
   });
+
+  it("parse大小比较符", function() {
+    expect(parse('1 < 2')()).toBe(true);
+    expect(parse('1 > 2')()).toBe(false);
+    expect(parse('1 <= 2')()).toBe(true);
+    expect(parse('2 >= 2')()).toBe(true);
+    expect(parse('1 >= 2')()).toBe(false);
+    expect(parse('2 >= 2')()).toBe(true);
+  });
+
+  it("parse相等比较", function() {
+    expect(parse('42 == 42')()).toBe(true);
+    expect(parse('42 == "42"')()).toBe(true);
+    expect(parse('42 != 42')()).toBe(false);
+    expect(parse('42 === 42')()).toBe(true);
+    expect(parse('42 === "42"')()).toBe(false);
+    expect(parse('42 !== 42')()).toBe(false);
+  });
+
+  it("大小比较优先", function() {
+    expect(parse('2 == "2" > 2 === "2"')()).toBe(false);
+  });
+
+  it("比加法低", function() {
+    expect(parse('2 + 3 < 6 - 2')()).toBe(false);
+  });
 });
 
 
