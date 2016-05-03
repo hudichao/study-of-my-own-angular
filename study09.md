@@ -46,4 +46,6 @@ undefined 和 null的特殊处理
 
 1.第一步
 注：用_.toPlainObject来保证继承的property也会检查。
+2.第二步
+忽略undefined
 

@@ -129,8 +129,13 @@ describe("filter filter", function() {
     expect(fn({arr: [{name: {first: 'Joe'}, role: 'admin'}, {name: {first: 'Jane'}, role: 'moderator'}]}))
     .toEqual([{name: {first: 'Jane'}, role: 'moderator'}]);
   });
-});
 
+  it("忽略expectation object中的未定义值", function() {
+    var fn = parse('arr | filter:{name:thisIsUndefined}');
+    expect(fn({arr: [{name: {first: 'Joe'}, role: 'admin'}, {name: {first: 'Jane'}, role: 'moderator'}]}))
+    .toEqual([{name: {first: 'Joe'}, role: 'admin'}, {name: {first: 'Jane'}, role: 'moderator'}]);
+  });
+});
 
 
 

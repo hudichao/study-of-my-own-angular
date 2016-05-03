@@ -23,6 +23,9 @@ function createPredicateFn(expression) {
         return _.every(
           _.toPlainObject(expected),
           function(expectedVal, expectedKey) {
+            if (_.isUndefined(expectedVal)) {
+              return true;
+            }
             return deepCompare(actual[expectedKey], expectedVal, comparator);
           } 
         );
