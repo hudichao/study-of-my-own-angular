@@ -28,3 +28,5 @@ function(ensureSafeMemberName, ensureSafeObject, ensureSafeFunction,
 
 使用|something:2 的形式给filter传入第二个参数
 
+### 实现angular的filter filter
+
