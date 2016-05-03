@@ -48,4 +48,11 @@ undefined 和 null的特殊处理
 注：用_.toPlainObject来保证继承的property也会检查。
 2.第二步
 忽略undefined
+这个compare有点通用的其实到这里为止。
+3.第三步
+如果有nested array，如果这个nested array中的任何一项match，就match
+4.第四步
+对于primitive， 需要只对同一level的进行匹配
+
+注意_.every中matchAnyProperty默认为false
 

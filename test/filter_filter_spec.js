@@ -135,6 +135,27 @@ describe("filter filter", function() {
     expect(fn({arr: [{name: {first: 'Joe'}, role: 'admin'}, {name: {first: 'Jane'}, role: 'moderator'}]}))
     .toEqual([{name: {first: 'Joe'}, role: 'admin'}, {name: {first: 'Jane'}, role: 'moderator'}]);
   });
+
+  it("在object中有nested array", function() {
+    var items = [
+      {users: [{name: {first: 'Joe'}, role: 'admin'}, {name: {first: 'Jane'}, role: 'moderator'}]},
+      {users: [{name: {first: 'Mary'}, role: 'admin'}]}
+    ];
+    var fn = parse('arr | filter: {users: {name: {first: "o"}}}');
+    expect(fn({arr:items})).toEqual([{users: [{name: {first: 'Joe'}, role: 'admin'}, {name: {first: 'Jane'}, role: 'moderator'}]}]);
+  });
+
+  it("对neseted object 只filter同级", function() {
+    var items = [
+      {user: "Bob"},
+      {user: {name: "Bob"}},
+      {user: {name: {first: "Bob", last: "Fox"}}}
+    ];
+
+    var fn = parse('arr | filter: {user: {name: "Bob"}}');
+    expect(fn({arr: items}))
+    .toEqual([{user: {name: "Bob"}}]);
+  });
 });
 
 

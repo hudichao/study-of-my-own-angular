@@ -14,9 +14,14 @@ function createPredicateFn(expression) {
     expected = ('' + expected).toLowerCase();
     return actual.indexOf(expected) !== -1;
   }
-  function deepCompare(actual, expected, comparator) {
+  function deepCompare(actual, expected, comparator, matchAnyProperty) {
     if (_.isString(expected) && _.startsWith(expected, '!')) {
-      return !deepCompare(actual, expected.substring(1), comparator);
+      return !deepCompare(actual, expected.substring(1), comparator, matchAnyProperty);
+    }
+    if (_.isArray(actual)) {
+      return _.some(actual, function(actualItem) {
+        return deepCompare(actualItem, expected, comparator, matchAnyProperty);
+      });
     }
     if (_.isObject(actual)) {
       if (_.isObject(expected)) {
@@ -29,17 +34,19 @@ function createPredicateFn(expression) {
             return deepCompare(actual[expectedKey], expectedVal, comparator);
           } 
         );
-      } else {
+      } else if (matchAnyProperty) {
         return _.some(actual, function(value) {
-          return deepCompare(value, expected, comparator);
+          return deepCompare(value, expected, comparator, matchAnyProperty);
         });
+      } else {
+        return comparator(actual, expected);
       }
     } else {
       return comparator(actual, expected);
     }
   }
   return function predicateFn(item) {
-    return deepCompare(item, expression, comparator);
+    return deepCompare(item, expression, comparator, true);
   };
 }
 
