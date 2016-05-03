@@ -2,6 +2,8 @@
 
 var parse = require("../src/parse");
 var _ = require("lodash");
+var register = require("../src/filter").register;
+
 describe("parse", function() {
   it("parse整数", function() {
     var fn = parse("42");
@@ -618,6 +620,19 @@ describe("parse", function() {
 
   it('returns the value of the last statement', function() {
     expect(parse('a = 1; b = 2; a + b')({})).toBe(3);
+  });
+
+
+  // for filter
+  it("可以parse filter expression", function() {
+    register("upcase", function() {
+      return function(str) {
+        return str.toUpperCase();
+      };
+    });
+    var fn = parse("aString | upcase");
+    console.log(fn.toString());
+    expect(fn({aString: "Hello"})).toEqual("HELLO");
   });
 });
 
