@@ -39,3 +39,6 @@ function(ensureSafeMemberName, ensureSafeObject, ensureSafeFunction,
 
 undefined 和 null的特殊处理
 
+### 否定的filter
+通过prefix的!
+
