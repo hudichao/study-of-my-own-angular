@@ -649,6 +649,26 @@ describe("parse", function() {
     var fn = parse('"hello" | upcase | exclamate');
     expect(fn()).toEqual("HELLO!");
   });
+
+  it("给filter传一个值", function() {
+    register("repeat", function() {
+      return function(s, times) {
+        return _.repeat(s, times);
+      }
+    });
+    var fn = parse('"hello" | repeat: 3');
+    expect(fn()).toEqual('hellohellohello');
+  });
+
+  it("给filter传多个值", function() {
+    register('surround', function() {
+      return function(s, left ,right) {
+        return left + s + right;
+      };
+    });
+    var fn = parse('"hello" | surround: "*":"!"');
+    expect(fn()).toEqual('*hello!');
+  });
 });
 
 

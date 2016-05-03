@@ -25,3 +25,6 @@ function(ensureSafeMemberName, ensureSafeObject, ensureSafeFunction,
 ```
 
 将AST.prototype.filter中的if改为while，即能支持chained filter。
+
+使用|something:2 的形式给filter传入第二个参数
+
