@@ -319,7 +319,6 @@ describe("parse", function() {
   });
 
   it("属性不存在时自动生成属性", function() {
-    parse.enableLog = true;
     var fn = parse('some["nested"].property.path = 42');
     var scope = {};
     fn(scope);
@@ -644,7 +643,7 @@ describe("parse", function() {
     register('exclamate', function() {
       return function(s) {
         return s + "!";
-      }
+      };
     });
     var fn = parse('"hello" | upcase | exclamate');
     expect(fn()).toEqual("HELLO!");
@@ -654,7 +653,7 @@ describe("parse", function() {
     register("repeat", function() {
       return function(s, times) {
         return _.repeat(s, times);
-      }
+      };
     });
     var fn = parse('"hello" | repeat: 3');
     expect(fn()).toEqual('hellohellohello');
