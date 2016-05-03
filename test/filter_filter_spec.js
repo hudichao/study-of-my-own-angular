@@ -99,6 +99,36 @@ describe("filter filter", function() {
     var fn = parse('arr | filter: "!o"');
     expect(fn({arr: ['quick', 'brown', 'fox']})).toEqual(['quick']);
   });
+
+  it("filter with an object", function() {
+    var fn = parse('arr | filter: {name: "o"}');
+    expect(fn({arr: [{name: 'Joe', role: 'admin'}, {name: 'Jane', role: 'moderator'}]}))
+    .toEqual([{name: 'Joe', role: 'admin'}]);
+  });
+
+  it("必须满足object中所有条件", function() {
+    var fn = parse('arr | filter: {name: "o", role: "m"}');
+    expect(fn({arr: [{name: 'Joe', role: 'admin'}, {name: 'Jane', role: 'moderator'}]}))
+    .toEqual([{name: 'Joe', role: 'admin'}]);
+  });
+
+  it("如果object是空，全部通过", function() {
+    var fn = parse('arr | filter: {}');
+    expect(fn({arr: [{name: 'Joe', role: 'admin'}, {name: 'Jane', role: 'moderator'}]}))
+    .toEqual([{name: 'Joe', role: 'admin'}, {name: 'Jane', role: 'moderator'}]);
+  });
+
+  it("neste object 标准", function() {
+    var fn = parse('arr | filter: {name: {first: "o"}}');
+    expect(fn({arr: [{name: {first: 'Joe'}, role: 'admin'}, {name: {first: 'Jane'}, role: 'moderator'}]}))
+    .toEqual([{name: {first: 'Joe'}, role: 'admin'}]);
+  });
+
+  it("可以取反object", function() {
+    var fn = parse('arr | filter: {name: {first: "!o"}}');
+    expect(fn({arr: [{name: {first: 'Joe'}, role: 'admin'}, {name: {first: 'Jane'}, role: 'moderator'}]}))
+    .toEqual([{name: {first: 'Jane'}, role: 'moderator'}]);
+  });
 });
 
 
