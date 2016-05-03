@@ -634,6 +634,21 @@ describe("parse", function() {
     console.log(fn.toString());
     expect(fn({aString: "Hello"})).toEqual("HELLO");
   });
+
+  it("chained filter", function() {
+    register("upcase", function() {
+      return function(s) {
+        return s.toUpperCase();
+      };
+    });
+    register('exclamate', function() {
+      return function(s) {
+        return s + "!";
+      }
+    });
+    var fn = parse('"hello" | upcase | exclamate');
+    expect(fn()).toEqual("HELLO!");
+  });
 });
 
 

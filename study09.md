@@ -24,3 +24,4 @@ function(ensureSafeMemberName, ensureSafeObject, ensureSafeFunction,
   } return fn;
 ```
 
+将AST.prototype.filter中的if改为while，即能支持chained filter。

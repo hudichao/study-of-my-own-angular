@@ -430,7 +430,7 @@ AST.prototype.ternary = function() {
 };
 AST.prototype.filter = function() {
   var left = this.assignment();
-  if (this.expect("|")) {
+  while (this.expect("|")) {
     left = {
       type: AST.CallExpression,
       callee: this.identifier(),
@@ -573,6 +573,10 @@ ASTCompiler.prototype.compile = function(text) {
   var fnString = this.filterPrefix() + 'var fn = function(s,l){' + 
     (this.state.vars.length ? 'var ' + this.state.vars.join(",") + ";" : "") + 
     this.state.body.join("") + "}; return fn;";
+  if (parse.enableLog) {
+    // fnString 生成了后面的output
+    console.log(fnString);
+  }
   /* jshint -W054 */
   var output = new Function(
     "ensureSafeMemberName",
@@ -588,7 +592,7 @@ ASTCompiler.prototype.compile = function(text) {
       filter);
   /* jshint +W054 */
   if (parse.enableLog) {
-    // console.log(output.toString());
+    console.log(output.toString());
   }
   return output;
 };
