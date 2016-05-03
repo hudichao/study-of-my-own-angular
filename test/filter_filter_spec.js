@@ -62,6 +62,38 @@ describe("filter filter", function() {
     expect(fn({arr: [[{name: "John"}, {name: "Mary"}], [{name: "Jane"}]]}))
     .toEqual([[{name: "John"}, {name: "Mary"}]]);
   });
+
+  it("filter with number", function() {
+    var fn = parse('arr | filter: 42');
+    expect(fn({arr: [{name: "Mary", age: 42}, {name: "John", age: 43}, {name: "Jane", age: 44}]}))
+    .toEqual([{name: "Mary", age: 42}]);
+  });
+
+  it("filter with boolean", function() {
+    var fn = parse('arr | filter: true');
+    expect(fn({arr: [{name: "Mary", admin: true}, {name: "John", admin: true}, {name: "Jane", admin: false}]}))
+    .toEqual([{name: "Mary", admin: true}, {name: "John", admin: true}]);
+  });
+
+  it("filters with a substring numeric value", function() {
+    var fn = parse('arr | filter: 42');
+    expect(fn({arr: ['contains 42']})).toEqual(['contains 42']);
+  });
+
+  it("filters matching null", function() {
+    var fn = parse("arr | filter: null");
+    expect(fn({arr: [null, 'not null']})).toEqual([null]);
+  });
+
+  it("does not match null value with the string null", function() {
+    var fn = parse('arr | filter: "null"');
+    expect(fn({arr: [null, 'not null']})).toEqual(['not null']);
+  });
+
+  it("undefined字符串不会match undefined的值", function() {
+    var fn = parse('arr | filter: "undefined"');
+    expect(fn({arr: [undefined, 'undefined']})).toEqual(['undefined']);
+  });
 });
 
 

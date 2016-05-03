@@ -32,3 +32,10 @@ function(ensureSafeMemberName, ensureSafeObject, ensureSafeFunction,
 通过函数的filter直接使用lodash的_.filter即可。
 
 对nested array和nest object 的filter
+
+用其他primitive filter
+
+注意数字filter会filter数字的string。即filter:42 会filter出'42'
+
+undefined 和 null的特殊处理
+
