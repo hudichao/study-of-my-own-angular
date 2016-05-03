@@ -31,3 +31,4 @@ function(ensureSafeMemberName, ensureSafeObject, ensureSafeFunction,
 ### 实现angular的filter filter
 通过函数的filter直接使用lodash的_.filter即可。
 
+对nested array和nest object 的filter

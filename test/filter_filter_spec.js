@@ -44,6 +44,24 @@ describe("filter filter", function() {
       {firstName: 'Jane', lastName: 'Fox'}
     ]);
   });
+
+  it("nested object filter", function() {
+    var fn = parse('arr | filter: "o"');
+    expect(fn({arr: [
+      {name: {first: 'John', last: 'Brown'}},
+      {name: {first: 'Jane', last: 'Fox'}},
+      {name: {fist: 'Mary', last: 'Quick'}}
+    ]})).toEqual([
+      {name: {first: 'John', last: 'Brown'}},
+      {name: {first: 'Jane', last: 'Fox'}}
+    ]);
+  });
+
+  it("nested array filter", function() {
+    var fn = parse('arr | filter: "o"');
+    expect(fn({arr: [[{name: "John"}, {name: "Mary"}], [{name: "Jane"}]]}))
+    .toEqual([[{name: "John"}, {name: "Mary"}]]);
+  });
 });
 
 
