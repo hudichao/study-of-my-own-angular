@@ -12,4 +12,19 @@ describe("filter", function() {
     register("my", myFilterFactory);
     expect(filter("my")).toBe(myFilter);
   });
+  it("用object形式来注册多个filter", function() {
+    var myFilter = function() {};
+    var myOtherFilter = function() {};
+    register({
+      my: function() {
+        return myFilter;
+      },
+      myOther: function() {
+        return myOtherFilter;
+      }
+    });
+
+    expect(filter("my")).toBe(myFilter);
+    expect(filter("myOther")).toBe(myOtherFilter);
+  });
 });
