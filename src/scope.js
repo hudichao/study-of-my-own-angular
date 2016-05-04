@@ -1,5 +1,6 @@
 'use strict';
 var _ = require("lodash");
+var parse = require("./parse");
 
 function Scope() {
   this.$$watchers = [];
@@ -111,6 +112,8 @@ Scope.prototype.$watchCollection = function(watchFn, listenerFn) {
   var changeCount = 0;
   var firstRun = true;
 
+  watchFn = parse(watchFn);
+  
   var internalWatchFn = function(scope) {
     newVal = watchFn(scope);
     var newLength;
@@ -359,7 +362,7 @@ Scope.prototype.$$areEqual = function(newVal, oldVal, valueEq) {
 Scope.prototype.$watch = function(watchFn, listenerFn, valueEq) {
   var self = this;
   var watcher = {
-    watchFn: watchFn,
+    watchFn: parse(watchFn),
     listenerFn: listenerFn || function(){},
     valueEq: Boolean(valueEq),
     last: initWatchVal

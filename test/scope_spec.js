@@ -773,6 +773,20 @@ describe("Scope", function() {
       expect(scope.counter).toBe(0);
 
     }); 
+
+
+    it("watch接受expression", function() {
+      var theValue;
+
+      scope.aValue = 42;
+      scope.$watch('aValue', function(newVal, oldVal, scope) {
+        theValue = newVal;
+      });
+      scope.$digest();
+
+      expect(theValue).toBe(42);
+    });
+
   });
 
   describe("$watchGroup", function() {
@@ -1703,6 +1717,18 @@ describe("Scope", function() {
       scope.$digest();
 
       expect(oldValueGiven).toEqual({a: 1, b: 2});
+    });
+
+    it("watchCollection接受expression", function() {
+      var theValue;
+
+      scope.aColl = [1, 2, 3];
+      scope.$watchCollection('aColl', function(newVal, oldVal, scope) {
+        theValue = newVal;
+      });
+      scope.$digest();
+
+      expect(theValue).toEqual([1, 2, 3]);
     });
   });
 

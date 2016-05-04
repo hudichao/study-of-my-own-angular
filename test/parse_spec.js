@@ -668,6 +668,13 @@ describe("parse", function() {
     var fn = parse('"hello" | surround: "*":"!"');
     expect(fn()).toEqual('*hello!');
   });
+
+  //Watching Expression 章开始
+  it("parse function 返回自己", function() {
+    var fn = function() {};
+    expect(parse(fn)).toBe(fn);
+  });
+
 });
 
 
