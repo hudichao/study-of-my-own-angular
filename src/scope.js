@@ -113,7 +113,7 @@ Scope.prototype.$watchCollection = function(watchFn, listenerFn) {
   var firstRun = true;
 
   watchFn = parse(watchFn);
-  
+
   var internalWatchFn = function(scope) {
     newVal = watchFn(scope);
     var newLength;
@@ -348,7 +348,7 @@ Scope.prototype.$evalAsync = function(expr) {
   this.$$asyncQueue.push({scope: this, expression: expr});
 };
 Scope.prototype.$eval = function(expr, locals) {
-  return expr(this, locals);
+  return parse(expr)(this, locals);
 };
 Scope.prototype.$$areEqual = function(newVal, oldVal, valueEq) {
   if (valueEq) {

@@ -2086,4 +2086,44 @@ describe("Scope", function() {
       expect(listener).not.toHaveBeenCalled();
     });
   });
+
+  //加个
+  describe("$eval", function() {
+    var scope;
+    beforeEach(function() {
+      scope = new Scope();
+    });
+    it("$eval接受expression", function() {
+      expect(scope.$eval('42')).toBe(42);
+    });
+  });
+
+  describe("$apply", function() {
+    var scope;
+    beforeEach(function() {
+      scope = new Scope();
+    });
+    it("$apply接受expression", function() {
+      scope.aFunction = _.constant(42);
+      expect(scope.$apply('aFunction()')).toBe(42);
+    });
+  });
+
+  describe("$evalAsync", function() {
+    var scope;
+    beforeEach(function() {
+      scope = new Scope();
+    });
+    it("$evalAsync", function() {
+      var called;
+      scope.aFunction = function() {
+        called = true;
+      };
+      scope.$evalAsync("aFunction()");
+      scope.$$postDigest(function() {
+        expect(called).toBe(true);
+        done();
+      });
+    });
+  });
 });
