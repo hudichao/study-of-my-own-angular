@@ -2137,5 +2137,77 @@ describe("Scope", function() {
       scope.$digest();
       expect(scope.$$watchers.length).toBe(0);
     });
+
+    it("one-time watch", function() {
+      var theValue;
+
+      scope.aValue = 42;
+      scope.$watch("::aValue", function(newVal, oldVal, scope) {
+        theValue = newVal;
+      });
+      scope.$digest();
+      expect(theValue).toBe(42);
+    });
+
+    it("remove one-time watch after first invocation", function() {
+      scope.aValue = 42;
+      scope.$watch("::aValue", function() {});
+      scope.$digest();
+
+      expect(scope.$$watchers.length).toBe(0);
+    });
+
+    it("在value被定义前不remove one-time-watcher", function() {
+      scope.$watch("::aValue", function() {});
+
+      scope.$digest();
+      expect(scope.$$watchers.length).toBe(1);
+
+      scope.aValue = 42;
+      scope.$digest();
+      expect(scope.$$watchers.length).toBe(0);
+    });
+
+    it("does not remove one-time-watches until value stays defined", function() {
+      scope.aValue = 42;
+
+      scope.$watch("::aValue", function() {});
+
+      var unwatchDeleter = scope.$watch("aValue", function() {
+        delete scope.aValue;
+      });
+
+      scope.$digest();
+      expect(scope.$$watchers.length).toBe(2);
+
+      scope.aValue = 42;
+      unwatchDeleter();
+      scope.$digest();
+      expect(scope.$$watchers.length).toBe(0);
+
+    });
+
+
+
+    it("does not remove one-time watches before all array items defined", function() {
+      scope.$watch("::[1,2,aValue]", function() {}, true);
+      scope.$digest();
+      expect(scope.$$watchers.length).toBe(1);
+
+      scope.aValue = 3;
+      scope.$digest();
+      expect(scope.$$watchers.length).toBe(0);
+    });
+
+    it("does not remove one-time watches before all object vals defined", function() {
+      scope.$watch("::{a: 1, b: aValue}", function() {}, true);
+      scope.$digest();
+      expect(scope.$$watchers.length).toBe(1);
+
+      scope.aValue = 3;
+      scope.$digest();
+      expect(scope.$$watchers.length).toBe(0);
+    });
+
   });
 });

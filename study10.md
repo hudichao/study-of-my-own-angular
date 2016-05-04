@@ -29,11 +29,20 @@ constant expression都会返回同一个value。所以一旦这个constant expre
 
 创建一个watchDelegte来出来watchFn的生成
 
+### one-time expression
 
+one-time watching完全由parse.js处理。会有一个oneTimeWatchDelegate
 
+oneTimeWatchDelegate只有在newVal不是undefined的时候才会unwatch。是为了对应那种ajax赋值情况。
 
+不仅如此，还要保证只有当这个value稳定下来之后才remove，因为有可能在digest之间值为undefeind。
+所以在digest结束时候钥匙undefined之外的值。
 
+对于collection literal（如array或者object），one-time watch只有在其每一项都不是undefined的时候remove
 
+已支持类似ngClass, ngStyle的配置。
+
+p368的_.any应该为_.some
 
 
 

@@ -810,6 +810,7 @@ describe("parse", function() {
     expect(parse('true ? 1 : b').constant).toBe(false);
     expect(parse('a ? b : c').constant).toBe(false);
   });
+
 });
 
 
