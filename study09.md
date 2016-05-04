@@ -67,3 +67,21 @@ $: 表示任意property
 
 全等flag
 
+### 总结
+
+• That filters are applied to expressions using the pipe operator |.
+• That Angular expressions don’t support bitwise operators, and that the bitwise OR would con-
+flict with the filter operator.
+• That filters are registered and obtained using the  lter service.
+• How you can register several filters in bulk by giving the filter service an object.
+• How filter expressions are processed as call expressions by the AST builder and compiler.
+• That filter expressions have the lowest precedence of all expressions.
+• How the AST compiler generates JavaScript code to look up all the filters used in an expression
+from the filter service at runtime.
+• How several filter invocations can be chained.
+• How additional arguments can be passed to filters, and how they’re given to the filter function
+as the second, third, etc. arguments.
+• How the built-in filter filter works: With predicate functions, primitives, or objects as the filter
+expression. With nested objects and arrays. With wildcard $ keys, and with custom compara- tors.
+
+
