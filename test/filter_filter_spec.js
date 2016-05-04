@@ -181,7 +181,7 @@ describe("filter filter", function() {
     var filteredItems = [
       {name: "Joe", role: "admin"},
       {name: "Jane", role: "moderator"}
-    ]
+    ];
 
     expect(fn({arr: items}))
     .toEqual(filteredItems);
@@ -221,6 +221,24 @@ describe("filter filter", function() {
     ];
 
     expect(fn({arr: items})).toEqual(filteredItems);
+  });
+
+  it("允许使用自定义comparator", function() {
+    var fn = parse('arr | filter: {$: "o"}:myComparator');
+    expect(fn({
+      arr: ["o", "oo", "ao", "aa"],
+      myComparator: function(left, right) {
+        return left === right;
+      }
+    })).toEqual(['o']);
+  });
+
+  it("全等flag", function() {
+    var fn = parse('arr | filter: {name: "Jo"}:true');
+    expect(fn({
+      arr: [{name: 'Jo'}, {name: 'Joe'}]
+    }))
+    .toEqual([{name: 'Jo'}]);
   });
 });
 

@@ -63,4 +63,7 @@ $: 表示任意property
 
 还需支持nested wild card
 
+### filter with custom comparators
+
+全等flag
 
