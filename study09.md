@@ -56,3 +56,11 @@ undefined 和 null的特殊处理
 
 注意_.every中matchAnyProperty默认为false
 
+### Object Wildcards
+$: 表示任意property
+
+还需要支持primitive的情况。这个时候使用者干嘛还用wildcard。唉。
+
+还需支持nested wild card
+
+

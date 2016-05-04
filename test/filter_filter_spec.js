@@ -156,6 +156,72 @@ describe("filter filter", function() {
     expect(fn({arr: items}))
     .toEqual([{user: {name: "Bob"}}]);
   });
+
+  it("wildcard property", function() {
+    var fn = parse('arr | filter: {$: "o"}');
+    var items = [
+      {name: "Joe", role: "admin"},
+      {name: "Jane", role: "moderator"},
+      {name: "Jack", role: "admin"}
+    ];
+    var filteredItems = [
+      {name: "Joe", role: "admin"},
+      {name: "Jane", role: "moderator"}
+    ];
+    expect(fn({arr: items})).toEqual(filteredItems);
+  });
+
+  it("wild property on nestet object", function() {
+    var fn = parse('arr | filter: {$: "o"}');
+    var items = [
+      {name: "Joe", role: "admin"},
+      {name: "Jane", role: "moderator"},
+      {name: "Jack", role: "admin"}
+    ];
+    var filteredItems = [
+      {name: "Joe", role: "admin"},
+      {name: "Jane", role: "moderator"}
+    ]
+
+    expect(fn({arr: items}))
+    .toEqual(filteredItems);
+  });
+
+  // wildcard的常用场景
+  it("filter wildcard properties scoped to parent", function(){
+    var fn = parse('arr | filter: {name: {$: "o"}}');
+    var items = [
+      {name: {first: "Joe", last: "Fox"}, role: "admin"},
+      {name: {first: "Jane", last: "Quick"}, role: "moderator"},
+      {name: {first: "Mary", last: "Brown"}, role: "admin"},
+    ];
+    var filteredItems = [
+      {name: {first: "Joe", last: "Fox"}, role: "admin"},
+      {name: {first: "Mary", last: "Brown"}, role: "admin"}
+    ];
+    expect(fn({arr: items}))
+    .toEqual(filteredItems);
+  });
+
+  it("用wildcard property filter primitive", function() {
+    var fn = parse('arr | filter: {$: "o"}');
+    expect(fn({arr: ['Joe', 'Jane', 'Mary']})).toEqual(['Joe']);
+  });
+
+  it("filter with a nested wildcard property", function() {
+    var fn = parse('arr | filter: {$: {$: "o"}}');
+    var items = [
+      {name: {first: "Joe", last: "Fox"}, role: "admin"},
+      {name: {first: "Jane", last: "Quick"}, role: "moderator"},
+      {name: {first: "Mary", last: "Brown"}, role: "admin"},
+    ];
+    var filteredItems = [
+      {name: {first: "Joe", last: "Fox"}, role: "admin"},
+      {name: {first: "Mary", last: "Brown"}, role: "admin"}
+    ];
+
+    expect(fn({arr: items})).toEqual(filteredItems);
+  });
 });
 
 
