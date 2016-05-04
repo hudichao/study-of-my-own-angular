@@ -23,7 +23,11 @@ computed (obj["a"]这种) 需object以及key都是constant
 assignment只有两边都是constant的时候才是constant，虽然没什么意义。
 
 
+### 优化constant expression watching
 
+constant expression都会返回同一个value。所以一旦这个constant expression被trigger，就再也不会dirty。即我们可以remove这个watch
+
+创建一个watchDelegte来出来watchFn的生成
 
 
 

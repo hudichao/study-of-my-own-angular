@@ -2126,4 +2126,16 @@ describe("Scope", function() {
       });
     });
   });
+
+  describe("$digest", function() {
+    var scope;
+    beforeEach(function() {
+      scope = new Scope();
+    });
+    it("第一次触发后移除constnt watch", function() {
+      scope.$watch('[1,2,3]', function() {});
+      scope.$digest();
+      expect(scope.$$watchers.length).toBe(0);
+    });
+  });
 });
