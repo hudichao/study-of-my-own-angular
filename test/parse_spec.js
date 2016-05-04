@@ -709,6 +709,107 @@ describe("parse", function() {
     var fn = parse('1 + 2');
     expect(fn.literal).toBe(false);
   });
+
+  it("整数是constant", function() {
+    var fn = parse('42');
+    expect(fn.constant).toBe(true);
+  });
+
+  it("字符串是constant", function() {
+    var fn = parse('"abc"');
+    expect(fn.constant).toBe(true);
+  });
+
+  it("boolean是constant", function() {
+    var fn = parse('true');
+    expect(fn.constant).toBe(true);
+  });
+
+  it("identifier是non-constant", function() {
+    var fn = parse('a');
+    expect(fn.constant).toBe(false);
+  });
+
+  it("array当所有元素为constant时是constant", function() {
+    expect(parse('[1,2,3]').constant).toBe(true);
+    expect(parse('[1,[2,[3]]]').constant).toBe(true);
+    expect(parse('[1,2,a]').constant).toBe(false);
+    expect(parse('[1,[2,[a]]]').constant).toBe(false);
+  });
+
+  it("object当所有value是constant时是constant", function() {
+    expect(parse('{a: 1, b: 2}').constant).toBe(true);
+    expect(parse('{a: 1, b: {c: 3}}').constant).toBe(true);
+    expect(parse('{a: 1, b: something}').constant).toBe(false);
+    expect(parse('{a: 1, b: {c: something}}').constant).toBe(false);
+  });
+
+  it("this是non-constant", function() {
+    expect(parse("this").constant).toBe(false);
+  });
+
+  it("non-computed lookup，当object是constant时是constant", function() {
+    expect(parse('{a: 1}.a').constant).toBe(true);
+    expect(parse('obj.a').constant).toBe(false);
+  });
+
+  it("computed look up,当object以及key是constant时是constant", function() {
+    expect(parse('{a: 1}["a"]').constant).toBe(true);
+    expect(parse('obj["a"]').constant).toBe(false);
+    expect(parse('{a:1}[something]').constant).toBe(false);
+    expect(parse('obj[something]').constant).toBe(false);
+  });
+
+  it("function calls为non-constant", function() {
+    expect(parse('aFunction()').constant).toBe(false);
+  });
+
+  it("filter是constnt如果arguments是constant", function() {
+    register('aFilter', function() {
+      return _.identity;
+    });
+    expect(parse('[1,2,3] | aFilter').constant).toBe(true);
+    expect(parse('[1,2,a] | aFilter').constant).toBe(false);
+    expect(parse('[1,2,3] | aFilter:42').constant).toBe(true);
+    expect(parse('[1,2,3] | aFilter:a').constant).toBe(false);
+  });
+
+  it("assignment两边都是constant时是constant", function(){
+    expect(parse('1=2').constant).toBe(true);
+    expect(parse('a=2').constant).toBe(false);
+    expect(parse('1=b').constant).toBe(false);
+    expect(parse('a=b').constant).toBe(false);
+  });
+
+  it("unary constant是constant如果argument是constant", function() {
+    expect(parse('+42').constant).toBe(true);
+    expect(parse('+a').constant).toBe(false);
+  });
+
+  it("binary是constant如果两边都是constant", function() {
+    expect(parse('1 + 2').constant).toBe(true);
+    expect(parse('1 + 2').literal).toBe(false);
+    expect(parse('1 + a').constant).toBe(false);
+    expect(parse('a + 1').constant).toBe(false);
+    expect(parse('a + a').constant).toBe(false);
+  });
+
+
+  it("logical是constant如果两边都是constant", function() {
+    expect(parse('true && false').constant).toBe(true);
+    expect(parse('true && false').literal).toBe(false);
+    expect(parse('true && a').constant).toBe(false);
+    expect(parse('a && false').constant).toBe(false);
+    expect(parse('a && b').constant).toBe(false);
+  });
+
+  it("ternary是constant如果三个都是constant", function() {
+    expect(parse('true ? 1 : 2').constant).toBe(true);
+    expect(parse('a ? 1 : 2').constant).toBe(false);
+    expect(parse('true ? a : 2').constant).toBe(false);
+    expect(parse('true ? 1 : b').constant).toBe(false);
+    expect(parse('a ? b : c').constant).toBe(false);
+  });
 });
 
 

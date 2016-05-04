@@ -2114,7 +2114,7 @@ describe("Scope", function() {
     beforeEach(function() {
       scope = new Scope();
     });
-    it("$evalAsync", function() {
+    it("$evalAsync", function(done) {
       var called;
       scope.aFunction = function() {
         called = true;
