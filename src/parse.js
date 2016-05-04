@@ -75,6 +75,13 @@ function parse(expr) {
   }
 
 }
+function isLiteral(ast) {
+  return ast.body.length === 0 ||
+    ast.body.length === 1 && (
+      ast.body[0].type === AST.Literal ||
+      ast.body[0].type === AST.ArrayExpression ||
+      ast.body[0].type === AST.ObjectExpression);
+}
 parse.enableLog = false;
 
 function Lexer() {
@@ -606,6 +613,7 @@ ASTCompiler.prototype.compile = function(text) {
   if (parse.enableLog) {
     console.log(output.toString());
   }
+  output.literal = isLiteral(ast);
   return output;
 };
 ASTCompiler.prototype.nextId = function(skip) {

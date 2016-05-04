@@ -675,6 +675,40 @@ describe("parse", function() {
     expect(parse(fn)).toBe(fn);
   });
 
+  it("整数literal",function() {
+    var fn = parse('42');
+    expect(fn.literal).toBe(true);
+  });
+
+  it("字符串literal",function() {
+    var fn = parse('"abc"');
+    expect(fn.literal).toBe(true);
+  });
+
+  it("boolean literal",function() {
+    var fn = parse('true');
+    expect(fn.literal).toBe(true);
+  });
+
+  it("数组literal",function() {
+    var fn = parse('[1, 2, aVariable]');
+    expect(fn.literal).toBe(true);
+  });
+
+  it("object literal",function() {
+    var fn = parse('{a: 1, b: aVariable}');
+    expect(fn.literal).toBe(true);
+  });
+
+  it("unary expression not literal",function() {
+    var fn = parse('!false');
+    expect(fn.literal).toBe(false);
+  });
+
+  it("binary expression not literal",function() {
+    var fn = parse('1 + 2');
+    expect(fn.literal).toBe(false);
+  });
 });
 
 
