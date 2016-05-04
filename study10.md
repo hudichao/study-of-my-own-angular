@@ -44,6 +44,20 @@ oneTimeWatchDelegate只有在newVal不是undefined的时候才会unwatch。是�
 
 p368的_.any应该为_.some
 
+### input tracking 369-386
+现在watch [a,b,c] 会抛10 $digest iterations reached 异常，
+因为现在是reference watch。expression每次都会生成一个新的array reference。
 
+改进：让每一个由parse生成的expression function包含input expression的信息。
+
+看不懂。。
+
+步骤总结：
+1. The compiler visits each AST node and sets its toWatch attribute based on its input nodes, when applicable.
+2. The compiler generates a separate JavaScript function body for each input of the top-level ex- pression. The inputs are determined based on the toWatch attribute populated in the previous step.
+3. The compiler’s watchFns method generates input expression functions for each of the bodies copiled in the previous step. It attaches them to the inputs attribute of the main expression function.
+4. An inputs watch delegate is attached to the expression when it is being watched.
+5. Instead of watching the main expression function, the inputs watch delegate watches each of
+the functions it finds in inputs.
 
 
